@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryDark">#F1F1F1</color>
+    <color name="colorAccent">#E12A89</color>
+    <color name="grey_color">#f1f1f1</color>
+    <color name="grey_background_color">#f7f7f7</color>
+
+    <color name="font_black_color">#1F2F42</color>
+    <color name="font_grey_color">#506175</color>
+    <color name="navigation_drawer_background_color">#23282D</color>
+    <color name="spinner_dropdown_background_color">@color/navigation_drawer_background_color</color>
+
+    <color name="white">#ffffff</color>
+</resources>
