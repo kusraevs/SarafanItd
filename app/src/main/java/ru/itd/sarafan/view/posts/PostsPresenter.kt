@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.businesslogic.ActivatedCategoriesManager
 import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
 import ru.itd.sarafan.rest.interactors.GetTagInteractor
 import ru.itd.sarafan.rest.interactors.LoadPostsInteractor
 import ru.itd.sarafan.rest.model.Categories
@@ -17,13 +18,15 @@ import javax.inject.Inject
  * Created by macbook on 16.10.17.
  */
 class PostsPresenter(private val getTagInteractor: GetTagInteractor,
-                     private val getCategoriesInteractor: GetCategoriesInteractor) : MviBasePresenter<PostsView, PostsViewState>() {
+                     private val getCategoriesInteractor: GetCategoriesInteractor,
+                     private val getSearchQueryInteractor: GetSearchQueryInteractor) : MviBasePresenter<PostsView, PostsViewState>() {
 
     @Inject lateinit var loadPosts: LoadPostsInteractor
     @Inject lateinit var activatedCategoriesManager: ActivatedCategoriesManager
 
     private var categories: Categories? = null
     private var tag: Term? = null
+    private var searchQuery: String? = null
 
     init {
         SarafanApplication.getComponent().inject(this)
@@ -39,14 +42,17 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
         val initCategoriesObservable = intent(PostsView::startInitIntent)
                 .flatMap { getCategoriesInteractor.execute() }
                 .doOnNext { this.categories = it }
+        val initSearchQueryObservable = intent(PostsView::startInitIntent)
+                .flatMap { getSearchQueryInteractor.execute() }
+                .doOnNext { this.searchQuery = it }
 
-        val initObservable = Observable.merge(initCategoriesObservable, initTagObservable).take(1)
+        val initObservable = Observable.merge(initCategoriesObservable, initTagObservable, initSearchQueryObservable).take(1)
 
         val categoriesChangedObservable = activatedCategoriesManager.categoriesUpdatePublisher
                 .doOnNext { this.categories = it }
 
         val loadFirstPageObservable = Observable.merge(initObservable, categoriesChangedObservable)
-                .switchMap { loadPosts.loadFirstPage(tagId = tag?.id, categories = categories) }
+                .switchMap { loadPosts.loadFirstPage(tagId = tag?.id, categories = categories, searchQuery = searchQuery) }
 
 
 
@@ -54,7 +60,7 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
         val allLoadPagesObservable = loadNextPageObservable
                 .distinctUntilChanged()
                 .filter { it != 0 }
-                .flatMap { loadPosts.loadNextPage(tagId = tag?.id, categories = categories) }
+                .flatMap { loadPosts.loadNextPage(tagId = tag?.id, categories = categories, searchQuery = searchQuery) }
 
 
 

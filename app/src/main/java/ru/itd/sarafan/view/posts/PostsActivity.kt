@@ -2,6 +2,7 @@ package ru.itd.sarafan.view.posts
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.app_bar_main.*
 import ru.itd.sarafan.R
@@ -17,10 +18,29 @@ class PostsActivity : AppCompatActivity() {
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val categories = intent.getSerializableExtra(PostsFragment.ARG_CATEGORIES) as? Categories
-        val tag = intent.getSerializableExtra(PostsFragment.ARG_TAG) as Term
-        FragmentUtils.replaceFragment(supportFragmentManager, PostsFragment.newInstance(categories, tag), FragmentUtils.POST_FRAGMENT_TAG)
 
-        supportActionBar?.title = tag.name
+        val categories = intent.getSerializableExtra(PostsFragment.ARG_CATEGORIES) as? Categories
+        val tag = intent.getSerializableExtra(PostsFragment.ARG_TAG) as? Term
+        val searchQuery = intent.getSerializableExtra(PostsFragment.ARG_SEARCH_QUERY) as? String
+
+        FragmentUtils.replaceFragment(supportFragmentManager, PostsFragment.newInstance(categories, tag, searchQuery), FragmentUtils.POST_FRAGMENT_TAG)
+
+        tag?.let {
+            supportActionBar?.title = tag.name
+        }
+        if (searchQuery != null && searchQuery.length > 1)
+            supportActionBar?.title = searchQuery.substring(0, 1).toUpperCase() + searchQuery.substring(1).toLowerCase()
+
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                this.onBackPressed()
+                true
+            }
+            else -> false
+        }
+    }
+
 }

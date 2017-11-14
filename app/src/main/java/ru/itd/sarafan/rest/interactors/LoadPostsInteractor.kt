@@ -24,25 +24,25 @@ class LoadPostsInteractor {
         SarafanApplication.getComponent().inject(this)
     }
 
-    fun loadFirstPage(tagId :Int?, categories: Categories?): Observable<PartialPostsChanges>{
+    fun loadFirstPage(tagId :Int?, categories: Categories?, searchQuery: String?): Observable<PartialPostsChanges>{
         noNextPage = false
         currentPage = 1
-        return loadNextPage(tagId, categories)
+        return loadNextPage(tagId, categories, searchQuery)
     }
 
 
-    fun loadNextPage(tagId :Int?, categories: Categories?): Observable<PartialPostsChanges>{
+    fun loadNextPage(tagId :Int?, categories: Categories?, searchQuery: String? = null): Observable<PartialPostsChanges>{
         val tags = if (tagId != null) arrayListOf(tagId) else null
-        return loadNextPage(tags = tags, categories = categories?.getIds(), isFirstPage = currentPage == 1)
+        return loadNextPage(tags = tags, categories = categories?.getIds(), searchQuery = searchQuery, isFirstPage = currentPage == 1)
     }
 
 
 
 
-    private fun loadNextPage(tags: List<Int>? = null, categories: List<Int>? = null, isFirstPage: Boolean): Observable<PartialPostsChanges>{
+    private fun loadNextPage(tags: List<Int>? = null, categories: List<Int>? = null, searchQuery: String? = null, isFirstPage: Boolean): Observable<PartialPostsChanges>{
         if (noNextPage)
             return Observable.just(PartialPostsChanges.NextPageLoaded(Collections.emptyList()))
-        return postsLoader.getPosts(tags, categories, currentPage)
+        return postsLoader.getPosts(tags, categories,  searchQuery, currentPage)
                 .doOnNext { currentPage++ }
                 .doOnNext { if (it.isEmpty()) noNextPage = true }
                 .map {

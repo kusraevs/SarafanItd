@@ -21,8 +21,9 @@ class MainPresenter(private val getCategoriesInteractor: GetCategoriesInteractor
 
         val changeRootCategoryObservable = intent(MainView::rootCategorySelected).flatMap { changeRootCategoryInteractor.execute(it) }
         val changeChildCategoryObservable = intent(MainView::childCategorySelected).flatMap { changeChildCategoryInteractor.execute(it) }
-
-        val allIntentsObservable = Observable.merge(getCategoriesObservable, changeRootCategoryObservable, changeChildCategoryObservable)
+        val searchTextSubmittedObservable = intent(MainView::searchTextSubmitted).map { MainViewPartialStateChange.SearchQueryChanged(it) }
+        val allIntentsObservable = Observable.merge(getCategoriesObservable, changeRootCategoryObservable,
+                changeChildCategoryObservable, searchTextSubmittedObservable)
                 .scan(MainViewState(), this::viewStateReducer)
                 .doOnError{ it.printStackTrace() }
                 //TODO(Move interactors to background thread)
@@ -34,13 +35,16 @@ class MainPresenter(private val getCategoriesInteractor: GetCategoriesInteractor
     private fun viewStateReducer(state: MainViewState, changes: MainViewPartialStateChange): MainViewState {
         return when (changes) {
             is MainViewPartialStateChange.CategoriesLoaded -> {
-                state.copy(data = changes.data)
+                state.copy(data = changes.data, rootCategory = changes.initialRootCategory)
             }
             is MainViewPartialStateChange.RootCategoryChanged -> {
                 state.copy(rootCategory = changes.rootCategory, childCategory = changes.newChildCategory)
             }
             is MainViewPartialStateChange.ChildCategoryChanged -> {
                 state.copy(childCategory = changes.childCategory)
+            }
+            is MainViewPartialStateChange.SearchQueryChanged -> {
+                state.copy(navigateToSearchWithQuery = changes.query)
             }
         }
     }

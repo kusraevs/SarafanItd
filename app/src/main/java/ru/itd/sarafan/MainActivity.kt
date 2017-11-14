@@ -1,6 +1,8 @@
 package ru.itd.sarafan
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.AppCompatSpinner
@@ -35,15 +37,24 @@ import ru.itd.sarafan.view.posts.PostsPresenter
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import android.support.v4.view.MenuItemCompat
+import android.support.v7.widget.SearchView
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView
+import ru.itd.sarafan.view.post.PostActivity
+import ru.itd.sarafan.view.posts.PostsActivity
+import java.util.concurrent.TimeUnit
+
 
 class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapter.RootCategoryClickListener,
         PostsPresenter.MainPresenterHolder, MainView {
 
     @BindView(R.id.rv_root_categories) lateinit var rvRootCategories: RecyclerView
     @BindView(R.id.categories_spinner) lateinit var categoriesSpinner: AppCompatSpinner
+    @BindView(R.id.search_view) lateinit var searchView: SearchView
 
     private val rootCategoryClickSubject = PublishSubject.create<Category>()
     private val childCategoryClickSubject = PublishSubject.create<Category>()
+    private val searchQuerySubmittedSubject = PublishSubject.create<String>()
 
     private lateinit var rootCategoriesAdapter: RootCategoriesAdapter
     private lateinit var categoriesSpinnerAdapter: CategoriesSpinnerAdapter
@@ -64,8 +75,15 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
         //nav_view.setNavigationItemSelectedListener(this)
         FragmentUtils.replaceFragment(supportFragmentManager, PostsFragment(), FragmentUtils.POST_FRAGMENT_TAG)
 
+        RxSearchView.queryTextChangeEvents(searchView)
+                .filter { event -> event.isSubmitted }
+                .map { event -> event.queryText().toString() }
+                .subscribe(searchQuerySubmittedSubject::onNext)
 
     }
+
+    override fun searchTextSubmitted(): Observable<String> = searchQuerySubmittedSubject
+
 
     override fun createPresenter(): MainPresenter {
         val categories = intent.getSerializableExtra(IntentUtils.CATEGORIES_INTENT_KEY) as Categories
@@ -99,21 +117,6 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // post you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun startLoadingObservable(): Observable<Boolean> = Observable.just(true)
     override fun rootCategorySelected(): Observable<Category> = rootCategoryClickSubject
     override fun childCategorySelected(): Observable<Category> = childCategoryClickSubject
@@ -121,9 +124,17 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
 
     override fun render(state: MainViewState) {
         if (state.data != null)
-            showRootCategories(state.data.categories!!, state.rootCategory)
-        if (state.rootCategory != null) {
-            showChildCategories(state.rootCategory.childs!!)
+            showRootCategories(state.data.categories, state.rootCategory)
+
+        state.rootCategory?.childs?.let {
+            showChildCategories(it)
+        }
+
+        if (state.navigateToSearchWithQuery != ""){
+            val intent = Intent(this, PostsActivity::class.java)
+            intent.putExtra(PostsFragment.ARG_SEARCH_QUERY, state.navigateToSearchWithQuery)
+            startActivity(intent)
+            searchQuerySubmittedSubject.onNext("")
         }
     }
 
@@ -132,6 +143,10 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
         rootCategoriesAdapter.data = rootCategories
         rootCategoriesAdapter.selectedCategory = rootCategory
         rvRootCategories.adapter.notifyDataSetChanged()
+
+        //TODO Temporary solution with delay
+        if (rootCategories.isNotEmpty() && rootCategory == null)
+            Handler().postDelayed({ rootCategoryClickSubject.onNext(rootCategories[0]) }, 100)
     }
 
     private fun showChildCategories(childCategories: List<Category>) {

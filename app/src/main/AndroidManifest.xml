@@ -12,17 +12,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.splash.SplashActivity"
+        <activity
+            android:name=".view.splash.SplashActivity"
             android:theme="@style/AppTheme.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="" />
-        <activity android:name=".view.posts.PostsActivity"/>
+        <activity android:name=".view.posts.PostsActivity" />
+        <activity
+            android:name=".view.post.PostActivity"
+            android:label=""
+            android:parentActivityName=".view.posts.PostsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.itd.sarafan.view.posts.PostsActivity" />
+        </activity>
     </application>
 
 </manifest>

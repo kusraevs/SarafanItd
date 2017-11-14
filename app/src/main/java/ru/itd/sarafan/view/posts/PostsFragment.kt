@@ -16,12 +16,13 @@ import io.reactivex.Observable
 import ru.itd.sarafan.R
 import ru.itd.sarafan.di.DependencyUtils
 import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
 import ru.itd.sarafan.rest.interactors.GetTagInteractor
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Post
 import ru.itd.sarafan.rest.model.tags.Term
 import ru.itd.sarafan.view.SpacesItemDecoration
-
+import ru.itd.sarafan.view.post.PostActivity
 
 
 class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, PostsController.ItemClickListener {
@@ -47,8 +48,10 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
     override fun createPresenter(): PostsPresenter {
         val categories = arguments?.getSerializable(ARG_CATEGORIES) as? Categories
         val tagTerm = arguments?.getSerializable(ARG_TAG) as? Term
+        val searchQuery = arguments?.getString(ARG_SEARCH_QUERY)
         return PostsPresenter(GetTagInteractor(tagTerm),
-                GetCategoriesInteractor(categories))
+                GetCategoriesInteractor(categories),
+                GetSearchQueryInteractor(searchQuery))
     }
 
     override fun loadFirstPageIntent(): Observable<Int> {
@@ -103,6 +106,9 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
     }
 
     override fun onPostClick(post: Post) {
+        val intent = Intent(activity, PostActivity::class.java)
+        intent.putExtra(ARG_POST, post)
+        startActivity(intent)
     }
     override fun onTagClicked(tagTerm: Term) {
         val intent = Intent(activity, PostsActivity::class.java)
@@ -114,15 +120,19 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
 
     companion object {
         val ARG_CATEGORIES = "categories"
+        val ARG_POST = "post"
         val ARG_TAG = "tag"
+        val ARG_SEARCH_QUERY = "searchQuery"
 
-        fun newInstance(categories: Categories? = null, tag: Term? = null): PostsFragment {
+        fun newInstance(categories: Categories? = null, tag: Term? = null, search: String? = null): PostsFragment {
             val fragment = PostsFragment()
             val args = Bundle()
             if (categories != null)
                 args.putSerializable(ARG_CATEGORIES, categories)
             if (tag != null)
                 args.putSerializable(ARG_TAG, tag)
+            if (search != null)
+                args.putString(ARG_SEARCH_QUERY, search)
             fragment.arguments = args
             return fragment
         }

@@ -23,7 +23,7 @@ public class MockInterceptor implements Interceptor {
         final String query = chain.request().url().toString();
         String responseJSONStr = null;
         if (query.contains("chats"))
-            responseJSONStr = ResourceFile.readJSONFromFile(context, R.raw.chats_jsonapi);
+            responseJSONStr = ResourceFile.readTextFromFile(context, R.raw.chats_jsonapi);
         if (responseJSONStr != null){
             Response response = new Response.Builder()
                     .code(200)

@@ -3,6 +3,7 @@ package ru.itd.sarafan.rest.model.embedded
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import ru.itd.sarafan.rest.model.tags.Term
+import java.io.Serializable
 import java.util.*
 
 /**
@@ -15,7 +16,7 @@ data class Embedded(
         ,
         @SerializedName("wp:term")
         val terms: List<List<Term>>
-) {
+) : Serializable {
 
     fun getTagTerms(): List<Term> = if (terms.size > 1) terms[1] else Collections.emptyList()
 

@@ -32,7 +32,10 @@ class LoadCategoriesInteractor {
                 .sorted()
                 .map { SplashState(data = Categories(it)) }
                // .startWith{ SplashState(loading = true) }
-                .onErrorReturn { SplashState(error = it) }
+                .onErrorReturn {
+                    it.printStackTrace()
+                    SplashState(error = it)
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

@@ -14,6 +14,7 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import ru.itd.sarafan.R
 import ru.itd.sarafan.rest.model.Post
+import ru.itd.sarafan.utils.DateUtils
 import ru.itd.sarafan.view.adapter.TagsAdapter
 
 /**
@@ -30,6 +31,8 @@ abstract class PostModel : EpoxyModelWithHolder<PostModel.PostViewHolder>() {
     override fun bind(holder: PostViewHolder) {
         holder.tvTitle.text = post.title?.rendered
         holder.tvText.text = Html.fromHtml(post.excerpt?.rendered)
+        holder.tvDate.text = DateUtils.formatDate(post.dateGmt)
+
         Glide.with(holder.ivPost).load(post.embedded.medias[0].imageUrl).into(holder.ivPost)
         setUpTagsRecyclerView(holder.rvTags)
 

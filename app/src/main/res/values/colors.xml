@@ -9,6 +9,7 @@
     <color name="font_black_color">#1F2F42</color>
     <color name="font_grey_color">#506175</color>
     <color name="navigation_drawer_background_color">#23282D</color>
+    <color name="navigation_drawer_selected_color">#22ffffff</color>
     <color name="spinner_dropdown_background_color">@color/navigation_drawer_background_color</color>
 
     <color name="white">#ffffff</color>

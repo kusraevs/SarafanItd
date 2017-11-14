@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="ru.itd.sarafan.view.post.PostActivity"
+    tools:showIn="@layout/activity_post">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/rv_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_post"
+            tools:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/tv_post_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/lato_bold"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/font_black_color"
+            android:textSize="24sp"
+            tools:text="@string/default_post_title" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
+
+            <WebView
+                android:id="@+id/web_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:fitsSystemWindows="true"
+                android:scrollbars="none"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        </FrameLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

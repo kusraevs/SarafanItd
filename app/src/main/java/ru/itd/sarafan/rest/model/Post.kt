@@ -1,9 +1,8 @@
 package ru.itd.sarafan.rest.model
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import ru.itd.sarafan.rest.model.embedded.Embedded
-import ru.itd.sarafan.rest.model.tags.Term
+import java.io.Serializable
 
 data class Post(val id: Int = 0,
                 val date: String = "",
@@ -33,4 +32,4 @@ data class Post(val id: Int = 0,
                 val categories: List<Int>? = null,
                 val tags: List<Int>? = null,
                 @SerializedName("_embedded")
-                val embedded: Embedded)
+                val embedded: Embedded): Serializable

@@ -10,5 +10,7 @@ sealed class MainViewPartialStateChange {
     data class CategoriesLoaded(val data: Categories? = null, val initialRootCategory: Category? = null) : MainViewPartialStateChange()
     data class RootCategoryChanged(val rootCategory: Category, val newChildCategory: Category?) : MainViewPartialStateChange()
     data class ChildCategoryChanged(val childCategory: Category) : MainViewPartialStateChange()
+    data class SearchQueryChanged(val query: String) : MainViewPartialStateChange()
+
 }
 

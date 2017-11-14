@@ -9,6 +9,7 @@ class CategoriesTreeBuilder: Function<List<Category>, List<Category>> {
 
   override fun apply(allCategories: List<Category>): List<Category> {
     val rootList = arrayListOf(allCategories[0].copy(id = 0))
+    //val rootList = allCategories.filter { it.id == 0 }.takeLast(1)
     return updateChildCategories(rootList, allCategories)[0].childs!!
   }
 

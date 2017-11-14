@@ -26,7 +26,7 @@ class RootCategoriesAdapter(val context: Context, var data: List<Category>, var 
         holder.itemView.setOnClickListener { clickListener?.onRootCategoryClicked(data[position]) }
 
         if (selectedCategory != null && data[position].id == selectedCategory!!.id){
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent))
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.navigation_drawer_selected_color))
         } else {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         }

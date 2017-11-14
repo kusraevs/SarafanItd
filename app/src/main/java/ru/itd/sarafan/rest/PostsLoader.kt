@@ -18,8 +18,8 @@ class PostsLoader() {
         SarafanApplication.getComponent().inject(this)
     }
 
-    fun getPosts(tags: List<Int>? = null, categories: List<Int>? = null, page: Int): Observable<List<Post>> {
-        return restApi.getPosts(tags, categories, page)//.delay(1, TimeUnit.SECONDS)
+    fun getPosts(tags: List<Int>? = null, categories: List<Int>? = null, searchQuery: String?, page: Int): Observable<List<Post>> {
+        return restApi.getPosts(tags, categories, searchQuery, page)//.delay(1, TimeUnit.SECONDS)
     }
 
 

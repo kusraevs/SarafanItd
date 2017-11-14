@@ -28,24 +28,37 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_glasha_toolbar"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintRight_toLeftOf="@+id/tv_toolbar_title" />
+                    app:layout_constraintRight_toLeftOf="@+id/tv_toolbar_title"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textAllCaps="true"
                     android:fontFamily="@font/lato_bold"
                     android:gravity="center_horizontal"
                     android:text="@string/app_name"
+                    android:textAllCaps="true"
                     android:textColor="@color/font_black_color"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/search_view"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:iconifiedByDefault="true"
+                    android:background="@color/white"
+                    app:queryBackground="@android:color/transparent"
+                    app:layout="@layout/search_layout"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.Toolbar>
 

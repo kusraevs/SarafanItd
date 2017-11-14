@@ -13,7 +13,8 @@ interface RestApi {
 
     @GET("posts/")
     fun getPosts(@Query("tags") tags: List<Int>? = null, @Query("categories") categories: List<Int>? = null,
-            @Query("page") page: Int, @Query("_embed") embedded: Boolean = true): Observable<List<Post>>
+                 @Query("search") query: String? = null, @Query("page") page: Int,
+                 @Query("_embed") embedded: Boolean = true): Observable<List<Post>>
 
     @GET("categories/")
     fun getCategories(@Query("per_page") limit: Int? = 100): Observable<List<Category>>

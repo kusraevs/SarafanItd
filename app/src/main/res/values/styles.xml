@@ -11,9 +11,9 @@
 
     </style>
 
-    <style name="AppTheme" parent="AppThemeBase"/>
+    <style name="AppTheme" parent="AppThemeBase" />
 
-    <style name="AppTheme.Translucent" parent="AppTheme"/>
+    <style name="AppTheme.Translucent" parent="AppTheme" />
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />

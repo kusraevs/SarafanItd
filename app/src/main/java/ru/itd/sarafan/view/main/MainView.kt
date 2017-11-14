@@ -13,6 +13,7 @@ interface MainView: MvpView {
 
     fun rootCategorySelected(): Observable<Category>
     fun childCategorySelected(): Observable<Category>
+    fun searchTextSubmitted(): Observable<String>
 
     fun render(state: MainViewState)
 }
