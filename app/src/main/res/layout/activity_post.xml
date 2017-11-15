@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/colorPrimary"
+            app:statusBarScrim="@color/colorPrimaryDark"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -36,9 +37,9 @@
                 android:id="@+id/gradient_master"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:fitsSystemWindows="true"
                 android:layout_gravity="top"
-                android:background="@drawable/gradient_white"
-                app:layout_collapseMode="pin" />
+                android:background="@drawable/gradient_white"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

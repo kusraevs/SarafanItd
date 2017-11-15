@@ -1,5 +1,6 @@
 package ru.itd.sarafan.view.post
 
+import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebView
 import android.widget.ImageView
@@ -14,6 +15,7 @@ import ru.itd.sarafan.rest.model.Post
 import ru.itd.sarafan.view.posts.PostsFragment
 import android.webkit.WebViewClient
 import android.graphics.Bitmap
+import android.net.Uri
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -26,10 +28,10 @@ import ru.itd.sarafan.rest.model.tags.Term
 import ru.itd.sarafan.utils.ResourceFile
 import ru.itd.sarafan.view.adapter.PostTagsAdapter
 import ru.itd.sarafan.view.adapter.TagsAdapter
+import ru.itd.sarafan.view.posts.PostsActivity
 
 
-class PostActivity : MviActivity<PostView, PostPresenter>(), PostView {
-
+class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapter.TagClickListener {
     @BindView(R.id.iv_post) lateinit var ivPost: ImageView
     @BindView(R.id.web_view) lateinit var webView: WebView
     @BindView(R.id.progress_bar) lateinit var progressBar: ProgressBar
@@ -45,9 +47,14 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView {
             progressBar.visibility = View.GONE
             webView.visibility = View.VISIBLE
         }
+
+        override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
+            view.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            return true
+        }
     }
 
-    lateinit var tagsLayoutManager: FlexboxLayoutManager
+    private lateinit var tagsLayoutManager: FlexboxLayoutManager
 
     override fun startIntent(): Observable<Boolean> = Observable.just(true)
 
@@ -101,8 +108,17 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView {
 
     private fun renderTags(tags: List<Term>){
         val tagsAdapter = PostTagsAdapter(rvTags.context, tags)
+        tagsAdapter.clickListener = this
         //tagsAdapter.clickListener = clickListener
         rvTags.swapAdapter(tagsAdapter, false)
     }
+
+    override fun onTagClicked(tagTerm: Term) {
+        val intent = Intent(this, PostsActivity::class.java)
+        intent.putExtra(PostsFragment.ARG_TAG, tagTerm)
+        startActivity(intent)
+    }
+
+
 
 }
