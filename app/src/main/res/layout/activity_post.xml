@@ -36,7 +36,7 @@
             <View
                 android:id="@+id/gradient_master"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="220dp"
                 android:fitsSystemWindows="true"
                 android:layout_gravity="top"
                 android:background="@drawable/gradient_white"/>

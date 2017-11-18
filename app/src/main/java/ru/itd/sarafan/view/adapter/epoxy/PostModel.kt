@@ -29,7 +29,7 @@ abstract class PostModel : EpoxyModelWithHolder<PostModel.PostViewHolder>() {
     override fun createNewHolder() = PostViewHolder()
 
     override fun bind(holder: PostViewHolder) {
-        holder.tvTitle.text = post.title?.rendered
+        holder.tvTitle.text = Html.fromHtml(post.title?.rendered)
         holder.tvText.text = Html.fromHtml(post.excerpt?.rendered)
         holder.tvDate.text = DateUtils.formatDate(post.dateGmt)
 

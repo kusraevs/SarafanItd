@@ -16,6 +16,7 @@ import ru.itd.sarafan.view.posts.PostsFragment
 import android.webkit.WebViewClient
 import android.graphics.Bitmap
 import android.net.Uri
+import android.text.Html
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -91,7 +92,7 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
                     .append(postfix).toString())
         }
         renderTags(post.embedded.getTagTerms())
-        tvPostTitle.text = post.title?.rendered
+        tvPostTitle.text = Html.fromHtml(post.title?.rendered)
 
     }
 
