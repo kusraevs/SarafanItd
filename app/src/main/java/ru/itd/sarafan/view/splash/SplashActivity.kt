@@ -39,10 +39,3 @@ class SplashActivity : MviActivity<SplashView, SplashPresenter>(), SplashView {
         finish()
     }
 }
-/*
-rvRootCategories.layoutManager = LinearLayoutManager(applicationContext)
-val adapter = RootCategoriesAdapter(applicationContext, list)
-rvRootCategories.adapter = adapter
-rvRootCategories.adapter.notifyDataSetChanged()
-adapter.clickListener = this
-*/
