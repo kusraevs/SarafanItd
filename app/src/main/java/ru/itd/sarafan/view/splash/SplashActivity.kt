@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import ru.itd.sarafan.MainActivity
 import ru.itd.sarafan.R
 import ru.itd.sarafan.rest.model.Categories
-import ru.itd.sarafan.utils.IntentUtils
+import ru.itd.sarafan.utils.RouterUtils
 
 class SplashActivity : MviActivity<SplashView, SplashPresenter>(), SplashView {
 
@@ -34,7 +34,7 @@ class SplashActivity : MviActivity<SplashView, SplashPresenter>(), SplashView {
 
     private fun goMain(categories: Categories){
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(IntentUtils.CATEGORIES_INTENT_KEY, categories)
+        intent.putExtra(RouterUtils.CATEGORIES_INTENT_KEY, categories)
         startActivity(intent)
         finish()
     }

@@ -8,41 +8,34 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuItem
+import android.support.v7.widget.SearchView
 import android.view.View
 import android.widget.AdapterView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hannesdorfmann.mosby3.mvi.MviActivity
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import ru.itd.sarafan.rest.CategoriesLoader
 import ru.itd.sarafan.rest.interactors.ChangeChildCategoryInteractor
 import ru.itd.sarafan.rest.interactors.ChangeRootCategoryInteractor
 import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Category
 import ru.itd.sarafan.utils.FragmentUtils
-import ru.itd.sarafan.utils.IntentUtils
+import ru.itd.sarafan.utils.RouterUtils
 import ru.itd.sarafan.view.adapter.CategoriesSpinnerAdapter
 import ru.itd.sarafan.view.drawer.RootCategoriesAdapter
 import ru.itd.sarafan.view.main.MainPresenter
 import ru.itd.sarafan.view.main.MainView
 import ru.itd.sarafan.view.main.MainViewState
+import ru.itd.sarafan.view.posts.PostsActivity
 import ru.itd.sarafan.view.posts.PostsFragment
 import ru.itd.sarafan.view.posts.PostsPresenter
 import java.util.*
-import javax.inject.Inject
 import kotlin.collections.ArrayList
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.widget.SearchView
-import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView
-import ru.itd.sarafan.view.post.PostActivity
-import ru.itd.sarafan.view.posts.PostsActivity
-import java.util.concurrent.TimeUnit
 
 
 class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapter.RootCategoryClickListener,
@@ -86,7 +79,7 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
 
 
     override fun createPresenter(): MainPresenter {
-        val categories = intent.getSerializableExtra(IntentUtils.CATEGORIES_INTENT_KEY) as Categories
+        val categories = intent.getSerializableExtra(RouterUtils.CATEGORIES_INTENT_KEY) as Categories
         presenter = MainPresenter(GetCategoriesInteractor(categories), ChangeRootCategoryInteractor(), ChangeChildCategoryInteractor())
         return presenter
     }

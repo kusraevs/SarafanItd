@@ -8,6 +8,7 @@ import io.reactivex.Observable
  */
 interface PostView: MvpView {
     fun startIntent(): Observable<Boolean>
+    fun shareClickIntent(): Observable<Boolean>
     fun render(state: PostViewState)
 
 }

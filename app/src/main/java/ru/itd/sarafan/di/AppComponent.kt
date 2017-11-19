@@ -10,6 +10,8 @@ import ru.itd.sarafan.rest.interactors.ChangeChildCategoryInteractor
 import ru.itd.sarafan.rest.interactors.ChangeRootCategoryInteractor
 import ru.itd.sarafan.rest.interactors.LoadCategoriesInteractor
 import ru.itd.sarafan.rest.interactors.LoadPostsInteractor
+import ru.itd.sarafan.view.post.PostActivity
+import ru.itd.sarafan.view.post.PostPresenter
 import ru.itd.sarafan.view.posts.PostsPresenter
 import ru.itd.sarafan.view.splash.SplashPresenter
 import javax.inject.Singleton
@@ -18,10 +20,14 @@ import javax.inject.Singleton
  * Created by macbook on 17.10.17.
  */
 @Singleton
-@Component(modules = arrayOf(RestApiModule::class, AppModule::class, PostsModule::class, CategoriesModule::class, MemoryManagerModule::class))
+@Component(modules = arrayOf(RestApiModule::class, AppModule::class,
+        PostsModule::class, CategoriesModule::class,
+        MemoryManagerModule::class, NavigationModule::class))
 interface AppComponent {
     fun inject(postsFragment: PostsFragment)
+    fun inject(postActivity: PostActivity)
     fun inject(postsPresenter: PostsPresenter)
+    fun inject(postPresenter: PostPresenter)
     fun inject(postsLoader: PostsLoader)
 
 

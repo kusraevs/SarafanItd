@@ -13,8 +13,8 @@ import ru.itd.sarafan.view.adapter.epoxy.PostModel_
  * Created by macbook on 16.10.17.
  */
 class PostsController: Typed3EpoxyController<List<Post>, Boolean, Boolean>() {
-    @AutoModel lateinit var loader: LoadingPostsModel_
-    @AutoModel lateinit var error: LoadingPostsErrorModel_
+    //@AutoModel lateinit var loader: LoadingPostsModel_
+    //@AutoModel lateinit var error: LoadingPostsErrorModel_
 
 
     var clickListener: ItemClickListener? = null
@@ -28,8 +28,8 @@ class PostsController: Typed3EpoxyController<List<Post>, Boolean, Boolean>() {
                     .clickListener(clickListener)
                     .addTo(this)
         }
-        loader.addIf(isLoadingMore, this);
-        error.addIf(isError, this)
+        //loader.addIf(isLoadingMore, this);
+        //error.addIf(isError, this)
     }
 
     interface ItemClickListener: PostModel.PostClickListener
