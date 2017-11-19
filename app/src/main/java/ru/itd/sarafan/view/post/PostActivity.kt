@@ -112,9 +112,11 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         post.content?.let {
             val prefix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_prefix)
             val postfix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_postfix)
-            renderWebView(StringBuilder().append(prefix)
+            val content = StringBuilder().append(prefix)
                     .append(post.content.rendered)
-                    .append(postfix).toString())
+                    .append(postfix).toString()
+            val contentFullWidth = content.replace("width=\"607\"", "width=100%")
+            renderWebView(contentFullWidth)
         }
         renderTags(post.embedded.getTagTerms())
         tvPostTitle.text = Html.fromHtml(post.title?.rendered)
@@ -122,17 +124,16 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
     }
 
     private fun renderWebView(html: String) {
-        val webSettings = webView.settings
-        webSettings.javaScriptEnabled = true
-        webSettings.useWideViewPort = false
-        webSettings.loadWithOverviewMode = true
-
+        //webView.setInitialScale(190)
         webView.webViewClient = webViewClient
         webView.webChromeClient = WebChromeClient()
         webView.setOnLongClickListener({ true })
 
-        //webView.getSettings().setLoadWithOverviewMode(true);
-        //webView.getSettings().setUseWideViewPort(true);
+        val webSettings = webView.settings
+        webSettings.javaScriptEnabled = true
+        webSettings.useWideViewPort = true
+        webSettings.loadWithOverviewMode = true
+
         webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
     }
 
