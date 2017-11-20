@@ -14,10 +14,24 @@ android {
         versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        config {
+            keyAlias 'sarafan'
+            keyPassword 'wzk5k1sj'
+            storeFile file(System.getenv("SARAFAN_KEYSTORE_HOME"))
+            storePassword 'wzk5k1sj'
+        }
+    }
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
+            signingConfig signingConfigs.config
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
     packagingOptions {
