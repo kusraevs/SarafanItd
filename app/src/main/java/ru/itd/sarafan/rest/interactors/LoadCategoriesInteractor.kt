@@ -31,7 +31,7 @@ class LoadCategoriesInteractor {
                 .map(CategoriesTreeBuilder())
                 .sorted()
                 .map { SplashState(data = Categories(it)) }
-               // .startWith{ SplashState(loading = true) }
+               // .startWith{ SplashState(hasMore = true) }
                 .onErrorReturn {
                     it.printStackTrace()
                     SplashState(error = it)

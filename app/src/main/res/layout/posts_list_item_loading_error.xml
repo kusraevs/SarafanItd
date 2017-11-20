@@ -7,7 +7,7 @@
 
 
     <Button
-        android:id="@+id/b_refresh"
+        android:id="@+id/b_load_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

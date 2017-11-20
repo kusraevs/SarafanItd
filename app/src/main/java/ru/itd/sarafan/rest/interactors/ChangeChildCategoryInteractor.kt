@@ -22,7 +22,7 @@ class ChangeChildCategoryInteractor {
 
     fun execute(category: Category): Observable<MainViewPartialStateChange> {
         return Observable.just(category)
-                .doOnNext { activatedCategoriesManager.setActivatedCategories(categories = Categories(listOf(category))) }
+                .doOnNext { activatedCategoriesManager.change(Categories(listOf(category))) }
                 .map { MainViewPartialStateChange.ChildCategoryChanged(category) }
     }
 }

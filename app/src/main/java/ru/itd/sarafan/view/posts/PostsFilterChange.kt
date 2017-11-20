@@ -9,4 +9,5 @@ import ru.itd.sarafan.rest.model.tags.Term
 sealed class PostsFilterChange(){
     data class CategoriesChange(val categories: Categories): PostsFilterChange()
     data class TagChange(val tagTerm: Term): PostsFilterChange()
+    data class SearchQueryChange(val searchQuery: String): PostsFilterChange()
 }
