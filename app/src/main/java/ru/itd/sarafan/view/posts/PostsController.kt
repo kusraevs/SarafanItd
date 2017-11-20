@@ -12,23 +12,19 @@ import ru.itd.sarafan.view.adapter.epoxy.PostModel_
 /**
  * Created by macbook on 16.10.17.
  */
-class PostsController: Typed3EpoxyController<List<Post>, Boolean, Boolean>() {
+class PostsController(val clickListener: ItemClickListener? = null): Typed3EpoxyController<List<Post>, Boolean, Boolean>() {
     @AutoModel lateinit var loader: LoadingPostsModel_
     @AutoModel lateinit var error: LoadingPostsErrorModel_
 
 
-    var clickListener: ItemClickListener? = null
-    var postsCount: Int = 0
-
-    override fun buildModels(data: List<Post>, isLoadingMore: Boolean, isError: Boolean) {
-        postsCount = data.size
+    override fun buildModels(data: List<Post>, hasMore: Boolean, isError: Boolean) {
         data.forEach { post ->
             PostModel_().post(post)
                     .id(post.id)
                     .clickListener(clickListener)
                     .addTo(this)
         }
-        loader.addIf(isLoadingMore, this);
+        loader.addIf(hasMore, this);
         error.addIf(isError, this)
     }
 

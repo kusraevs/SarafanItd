@@ -19,11 +19,19 @@ class MainPresenter(private val getCategoriesInteractor: GetCategoriesInteractor
                 .flatMap { getCategoriesInteractor.execute() }
                 .map { MainViewPartialStateChange.CategoriesLoaded(data = it) as MainViewPartialStateChange }
 
-        val changeRootCategoryObservable = intent(MainView::rootCategorySelected).flatMap { changeRootCategoryInteractor.execute(it) }
-        val changeChildCategoryObservable = intent(MainView::childCategorySelected).flatMap { changeChildCategoryInteractor.execute(it) }
+        val changeRootCategoryObservable = intent(MainView::rootCategorySelected)
+        val changeChildCategoryObservable = intent(MainView::childCategorySelected)
+        val changeCategoryObservable = Observable.merge(changeRootCategoryObservable, changeChildCategoryObservable)
+                .distinctUntilChanged()
+                .flatMap {
+                    if (it.parent == 0)
+                        changeRootCategoryInteractor.execute(it)
+                    else
+                        changeChildCategoryInteractor.execute(it)
+                }
+
         val searchTextSubmittedObservable = intent(MainView::searchTextSubmitted).map { MainViewPartialStateChange.SearchQueryChanged(it) }
-        val allIntentsObservable = Observable.merge(getCategoriesObservable, changeRootCategoryObservable,
-                changeChildCategoryObservable, searchTextSubmittedObservable)
+        val allIntentsObservable = Observable.merge(getCategoriesObservable, changeCategoryObservable, searchTextSubmittedObservable)
                 .scan(MainViewState(), this::viewStateReducer)
                 .doOnError{ it.printStackTrace() }
                 //TODO(Move interactors to background thread)

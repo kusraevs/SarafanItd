@@ -14,7 +14,6 @@ import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import io.reactivex.Observable
 import ru.itd.sarafan.R
-import ru.itd.sarafan.di.DependencyUtils
 import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
 import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
 import ru.itd.sarafan.rest.interactors.GetTagInteractor
@@ -27,6 +26,7 @@ import ru.itd.sarafan.view.post.PostActivity
 
 class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, PostsController.ItemClickListener {
 
+    private val VISIBlE_THRESHOLD = 5
     @BindView(R.id.rv_posts) lateinit var rvPosts: RecyclerView
 
     private lateinit var postsController: PostsController
@@ -54,20 +54,21 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
                 GetSearchQueryInteractor(searchQuery))
     }
 
-    override fun loadFirstPageIntent(): Observable<Int> {
-        return Observable.just(postsController.postsCount)
+    override fun loadFirstPageIntent(): Observable<Boolean> {
+        return Observable.just(true)
     }
     override fun startInitIntent(): Observable<Boolean> = Observable.just(true)
 
-    override fun loadNextPageIntent(): Observable<Int> {
+    override fun loadNextPageIntent(): Observable<Boolean> {
         return RxRecyclerView.scrollStateChanges(rvPosts)
-                .map { postsController.postsCount }
-               // .filter { event -> event == RecyclerView.SCROLL_STATE_IDLE }
-                .filter({ layoutManager.findLastVisibleItemPosition() > postsController.adapter.itemCount - 5 })
+                .filter { event -> event == RecyclerView.SCROLL_STATE_IDLE }
+                .filter({ layoutManager.findLastVisibleItemPosition() > postsController.adapter.itemCount - VISIBlE_THRESHOLD })
+                .filter { postsController.loader.isShown }
+                .map { true }
     }
 
     override fun render(state: PostsViewState) {
-        renderData(state.data, state.loading, state.error != null)
+        renderData(state.data, state.hasMore, state.error != null)
     }
 
     private fun renderData(data: List<Post>, isLoadingMore: Boolean, isError: Boolean){
@@ -80,8 +81,7 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
         layoutManager = LinearLayoutManager(context)
         rvPosts.layoutManager = layoutManager
         rvPosts.addItemDecoration(SpacesItemDecoration(24))
-        postsController = PostsController()
-        postsController.clickListener = this
+        postsController = PostsController(this)
         rvPosts.adapter = postsController.adapter
         rvPosts.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

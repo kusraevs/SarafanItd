@@ -21,9 +21,10 @@ class ChangeRootCategoryInteractor {
     fun execute(category: Category): Observable<MainViewPartialStateChange>{
         return Observable.just(category)
                 .map { getChildsListWithParentAtTheStart(category) }
-                .doOnNext { activatedCategoriesManager.setActivatedCategories(Categories(it)) }
-                .map { categoryList -> MainViewPartialStateChange.RootCategoryChanged(category.copy(childs = categoryList), categoryList[0])
-        }
+                .doOnNext { activatedCategoriesManager.change(Categories(it)) }
+                .map {
+                    categoryList -> MainViewPartialStateChange.RootCategoryChanged(category.copy(childs = categoryList), categoryList[0])
+                }
     }
 
     private fun getChildsListWithParentAtTheStart(category: Category): List<Category>{
