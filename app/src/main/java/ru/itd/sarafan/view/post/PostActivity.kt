@@ -116,6 +116,9 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
                     .append(post.content.rendered)
                     .append(postfix).toString()
             val contentFullWidth = content.replace("width=\"607\"", "width=100%")
+                    .replace("width=\"853\"", "width=100%")
+                    .replace("amp;", "")
+                    .replace("//vk.com", "https://vk.com")
             renderWebView(contentFullWidth)
         }
         renderTags(post.embedded.getTagTerms())
