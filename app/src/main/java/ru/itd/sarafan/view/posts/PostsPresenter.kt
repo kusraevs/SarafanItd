@@ -96,7 +96,7 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
                 state.copy(hasMore = true, loading = true, error = null)
             }
             is PartialPostsChanges.PostsLoadingError -> {
-                state.copy(hasMore = false, loading = false, error = changes.throwable)
+                state.copy(hasMore = true, loading = false, error = changes.throwable)
             }
         }
     }

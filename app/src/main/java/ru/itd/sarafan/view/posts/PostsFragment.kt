@@ -13,6 +13,7 @@ import butterknife.ButterKnife
 import com.hannesdorfmann.mosby3.mvi.MviFragment
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import ru.itd.sarafan.R
 import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
 import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
@@ -25,13 +26,18 @@ import ru.itd.sarafan.view.post.PostActivity
 
 
 class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, PostsController.ItemClickListener {
+    override fun loadAgainIntent(): Observable<Boolean> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    private val VISIBlE_THRESHOLD = 5
+    private val visibleThreshold = 5
+
     @BindView(R.id.rv_posts) lateinit var rvPosts: RecyclerView
 
     private lateinit var postsController: PostsController
     private lateinit var layoutManager: LinearLayoutManager
-    private var presenterHolder: PostsPresenter.MainPresenterHolder? = null
+
+    private val loadAgainPublishSubject = PublishSubject.create<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,17 +68,18 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
     override fun loadNextPageIntent(): Observable<Boolean> {
         return RxRecyclerView.scrollStateChanges(rvPosts)
                 .filter { event -> event == RecyclerView.SCROLL_STATE_IDLE }
-                .filter({ layoutManager.findLastVisibleItemPosition() > postsController.adapter.itemCount - VISIBlE_THRESHOLD })
+                .filter({ layoutManager.findLastVisibleItemPosition() > postsController.adapter.itemCount - visibleThreshold })
                 .filter { postsController.loader.isShown }
                 .map { true }
+                .mergeWith(loadAgainPublishSubject)
     }
 
     override fun render(state: PostsViewState) {
-        renderData(state.data, state.hasMore, state.error != null)
+        renderData(state.data, state.hasMore && state.error == null, state.error != null)
     }
 
-    private fun renderData(data: List<Post>, isLoadingMore: Boolean, isError: Boolean){
-        postsController.setData(data, isLoadingMore, isError)
+    private fun renderData(data: List<Post>, showLoading: Boolean, showError: Boolean){
+        postsController.setData(data, showLoading, showError)
     }
 
 
@@ -92,18 +99,7 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
         })
     }
 
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is PostsPresenter.MainPresenterHolder) {
-            presenterHolder = context
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        presenterHolder = null
-    }
+    //Controller callbacks
 
     override fun onPostClick(post: Post) {
         val intent = Intent(activity, PostActivity::class.java)
@@ -114,6 +110,9 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
         val intent = Intent(activity, PostsActivity::class.java)
         intent.putExtra(ARG_TAG, tagTerm)
         startActivity(intent)
+    }
+    override fun onLoadingPostErrorClick() {
+        loadAgainPublishSubject.onNext(true)
     }
 
 

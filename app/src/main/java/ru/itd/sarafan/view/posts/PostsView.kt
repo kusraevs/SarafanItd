@@ -10,6 +10,7 @@ interface PostsView: MvpView {
     fun startInitIntent(): Observable<Boolean>
     fun loadFirstPageIntent(): Observable<Boolean>
     fun loadNextPageIntent(): Observable<Boolean>
+    fun loadAgainIntent(): Observable<Boolean>
 
     fun render(state: PostsViewState)
 }

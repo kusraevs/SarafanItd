@@ -3,10 +3,7 @@ package ru.itd.sarafan.view.posts
 import com.airbnb.epoxy.AutoModel
 import com.airbnb.epoxy.Typed3EpoxyController
 import ru.itd.sarafan.rest.model.Post
-import ru.itd.sarafan.view.adapter.epoxy.LoadingPostsErrorModel_
-import ru.itd.sarafan.view.adapter.epoxy.LoadingPostsModel_
-import ru.itd.sarafan.view.adapter.epoxy.PostModel
-import ru.itd.sarafan.view.adapter.epoxy.PostModel_
+import ru.itd.sarafan.view.adapter.epoxy.*
 
 
 /**
@@ -17,16 +14,16 @@ class PostsController(val clickListener: ItemClickListener? = null): Typed3Epoxy
     @AutoModel lateinit var error: LoadingPostsErrorModel_
 
 
-    override fun buildModels(data: List<Post>, hasMore: Boolean, isError: Boolean) {
+    override fun buildModels(data: List<Post>, showLoading: Boolean, showError: Boolean) {
         data.forEach { post ->
             PostModel_().post(post)
                     .id(post.id)
                     .clickListener(clickListener)
                     .addTo(this)
         }
-        loader.addIf(hasMore, this);
-        error.addIf(isError, this)
+        loader.addIf(showLoading, this);
+        error.clickListener(clickListener).addIf(showError, this)
     }
 
-    interface ItemClickListener: PostModel.PostClickListener
+    interface ItemClickListener: PostModel.PostClickListener, LoadingPostsErrorModel.LoadingPostErrorClickListener
 }
