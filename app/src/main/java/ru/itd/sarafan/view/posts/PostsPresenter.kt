@@ -24,9 +24,12 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
     @Inject lateinit var loadPosts: LoadPostsInteractor
     @Inject lateinit var activatedCategoriesManager: ActivatedCategoriesManager
 
+
     private var categories: Categories? = null
     private var tag: Term? = null
     private var searchQuery: String? = null
+    private var isLoading: Boolean = false
+    private var hasMore: Boolean = true
 
     init {
         SarafanApplication.getComponent().inject(this)
@@ -48,7 +51,7 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
 
         val initObservable = Observable.merge(initCategoriesObservable, initTagObservable, initSearchQueryObservable).take(1)
 
-        val categoriesChangedObservable = activatedCategoriesManager.categoriesUpdatePublisher
+        val categoriesChangedObservable = activatedCategoriesManager.subscribeToUpdates()
                 .doOnNext { this.categories = it }
 
         val loadFirstPageObservable = Observable.merge(initObservable, categoriesChangedObservable)
@@ -58,14 +61,17 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
 
         val loadNextPageObservable = intent(PostsView::loadNextPageIntent)
         val allLoadPagesObservable = loadNextPageObservable
-                .distinctUntilChanged()
-                .filter { it != 0 }
+                .filter { !isLoading }
+                .filter { hasMore }
                 .flatMap { loadPosts.loadNextPage(tagId = tag?.id, categories = categories, searchQuery = searchQuery) }
-
 
 
         val allIntentsObservable = Observable.merge(allLoadPagesObservable, loadFirstPageObservable)
                 .scan(PostsViewState(), this::viewStateReducer)
+                .doOnNext {
+                    isLoading = it.loading
+                    hasMore = it.hasMore
+                }
 
         subscribeViewState(allIntentsObservable, PostsView::render)
     }
@@ -75,22 +81,22 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
         return when (changes) {
             is PartialPostsChanges.NextPageLoaded -> {
                 val newPosts = state.data + changes.posts
-                state.copy(data = newPosts, loading = changes.hasMore)
+                state.copy(data = newPosts, hasMore = changes.hasMore, loading = false)
             }
             is PartialPostsChanges.FirstPageLoaded -> {
-                state.copy(data = changes.posts, loading = changes.hasMore)
+                state.copy(data = changes.posts, hasMore = changes.hasMore, loading = false)
             }
             /*
             is PartialPostsChanges.CategoriesUpdate -> {
                 state.copy(categories = changes.categories.categories)
             }*/
-            is PartialPostsChanges.FirstPageLoading -> state.copy(data = Collections.emptyList(), loading = true, error = null)
+            is PartialPostsChanges.FirstPageLoading -> state.copy(data = Collections.emptyList(), hasMore = true, error = null)
 
             is PartialPostsChanges.NextPageLoading -> {
-                state.copy(loading = true, error = null)
+                state.copy(hasMore = true, loading = true, error = null)
             }
             is PartialPostsChanges.PostsLoadingError -> {
-                state.copy(loading = false, error = changes.throwable)
+                state.copy(hasMore = true, loading = false, error = changes.throwable)
             }
         }
     }
@@ -99,6 +105,7 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
         return when (change){
             is PostsFilterChange.CategoriesChange -> filter.copy(categories = change.categories)
             is PostsFilterChange.TagChange -> filter.copy(tag = change.tagTerm)
+            is PostsFilterChange.SearchQueryChange -> filter
         }
     }
 

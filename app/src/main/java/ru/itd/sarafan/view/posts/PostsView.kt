@@ -8,8 +8,9 @@ import io.reactivex.Observable
  */
 interface PostsView: MvpView {
     fun startInitIntent(): Observable<Boolean>
-    fun loadFirstPageIntent(): Observable<Int>
-    fun loadNextPageIntent(): Observable<Int>
+    fun loadFirstPageIntent(): Observable<Boolean>
+    fun loadNextPageIntent(): Observable<Boolean>
+    fun loadAgainIntent(): Observable<Boolean>
 
     fun render(state: PostsViewState)
 }

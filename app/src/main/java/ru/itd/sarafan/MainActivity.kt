@@ -15,6 +15,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.hannesdorfmann.mosby3.mvi.MviActivity
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView
+import com.jakewharton.rxbinding2.widget.RxAdapterView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
@@ -46,7 +47,6 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
     @BindView(R.id.search_view) lateinit var searchView: SearchView
 
     private val rootCategoryClickSubject = PublishSubject.create<Category>()
-    private val childCategoryClickSubject = PublishSubject.create<Category>()
     private val searchQuerySubmittedSubject = PublishSubject.create<String>()
 
     private lateinit var rootCategoriesAdapter: RootCategoriesAdapter
@@ -112,7 +112,12 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
 
     override fun startLoadingObservable(): Observable<Boolean> = Observable.just(true)
     override fun rootCategorySelected(): Observable<Category> = rootCategoryClickSubject
-    override fun childCategorySelected(): Observable<Category> = childCategoryClickSubject
+    override fun childCategorySelected(): Observable<Category> =
+            RxAdapterView.itemSelections(categoriesSpinner)
+                    .skipInitialValue()
+                    .map { position -> categoriesSpinnerAdapter.getItem(position) }
+                    .distinctUntilChanged()
+
 
 
     override fun render(state: MainViewState) {
@@ -120,7 +125,7 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
             showRootCategories(state.data.categories, state.rootCategory)
 
         state.rootCategory?.childs?.let {
-            showChildCategories(it)
+            showChildCategories(it, state.childCategory)
         }
 
         if (state.navigateToSearchWithQuery != ""){
@@ -142,22 +147,13 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
             Handler().postDelayed({ rootCategoryClickSubject.onNext(rootCategories[0]) }, 100)
     }
 
-    private fun showChildCategories(childCategories: List<Category>) {
+    private fun showChildCategories(childCategories: List<Category>, selectedCategory: Category?) {
         categoriesSpinnerAdapter.clear()
         categoriesSpinnerAdapter.addAll(childCategories)
         categoriesSpinnerAdapter.notifyDataSetChanged()
-        categoriesSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                childCategoryClickSubject.onNext(childCategories[position])
-            }
-
-        }
-
+        val selectedIndex = childCategories.indexOf(selectedCategory)
+        if (selectedIndex != -1)
+            categoriesSpinner.setSelection(selectedIndex)
     }
 
 

@@ -13,10 +13,10 @@ class FragmentUtils {
 
 
         fun replaceFragment(fragmentManager: FragmentManager, fragment: Fragment, tag: String) {
-            //if (fragmentManager.findFragmentByTag(tag) == null) {
+            if (fragmentManager.findFragmentByTag(tag) == null) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment, tag).commit()
-            //}
+            }
         }
 
     }

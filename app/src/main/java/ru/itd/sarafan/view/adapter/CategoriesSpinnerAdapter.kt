@@ -19,7 +19,7 @@ import ru.itd.sarafan.R
 class CategoriesSpinnerAdapter(context: Context, items: List<Category>):
         ArrayAdapter<Category>(context, R.layout.category_child_list_item, R.id.spinner_text, items) {
 
-    val inflater: LayoutInflater = LayoutInflater.from(context)
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view: View
