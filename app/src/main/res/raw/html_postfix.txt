@@ -1,2 +1,18 @@
+<script>
+    $(function () {
+        var iframes = $('iframe');
+
+       iframes.each(function() {
+            var srcOrigin = $(this)[0].getAttribute("src");
+            if(srcOrigin.substr(0,4) == "//vk"){
+                srcOrigin = srcOrigin.replace(/\/\/vk/g, "https://vk");
+                srcOrigin = srcOrigin.replace(/amp;/g, "");
+                $(this)[0].setAttribute("src", srcOrigin);
+            }
+
+           $(this).replaceWith("<div class='container'>" + $( this )[0].outerHTML + "</div>");
+        })
+    })
+</script>
 </body>
 </html>

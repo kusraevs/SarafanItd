@@ -10,14 +10,28 @@ android {
         applicationId "ru.itd.sarafan"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        config {
+            keyAlias 'sarafan'
+            keyPassword 'wzk5k1sj'
+            storeFile file(System.getenv("SARAFAN_KEYSTORE_HOME"))
+            storePassword 'wzk5k1sj'
+        }
+    }
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
+            signingConfig signingConfigs.config
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
     packagingOptions {
@@ -59,6 +73,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
 
     implementation 'ru.terrakok.cicerone:cicerone:2.1.0'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.7.2'
 
     // if you use the support libraries
 
