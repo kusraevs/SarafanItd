@@ -28,8 +28,8 @@
     <style type='text/css'>
 
     @font-face {
-            font-family: 'Lato-Regular';
-            src: url('file:///android_asset/fonts/lato_regular.ttf');
+            font-family: 'lato_regular';
+            src: url('fonts/lato_regular.ttf');
     }
     </style>
     <style type='text/css'>
@@ -37,9 +37,9 @@
             background-color:#fff;
         }
         body {
-    	    font-family: Lato-Regular;
+    	    font-family: 'lato_regular';
     	    font-size: 15px;
-    	    color: #1F2F42;
+    	    color: #576372;
         }
         a {color: #E12A89;}
 
@@ -70,43 +70,3 @@
 
 </head>
 <body>
-<style type='text/css'>
-
-@font-face {
-        font-family: 'Lato-Regular';
-        src: url('file:///android_asset/fonts/lato_regular.ttf');
-}
-</style>
-<style type='text/css'>
-    html {
-        background-color:#fff;
-    }
-    body {
-	    font-family: Lato-Regular;
-	    font-size: 15px;
-	    color: #1F2F42;
-    }
-    a {color: #E12A89;}
-
-
-    /*Video styles full width with saved ratio.
-        <div class="container">
-        <iframe src="//www.youtube.com/embed/yCOY82UdFrw"
-        frameborder="0" allowfullscreen class="video"></iframe>
-        </div>
-    */
-
-   .container {
-        position: relative;
-        width: 100%;
-        height: 0;
-        padding-bottom: 56.25%;
-    }
-    .container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-</style>

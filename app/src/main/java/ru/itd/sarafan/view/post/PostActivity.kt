@@ -129,6 +129,7 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
     }
 
     private fun renderWebView(html: String) {
+
         //webView.setInitialScale(190)
         webView.webViewClient = webViewClient
         webView.webChromeClient = WebChromeClient()
@@ -139,7 +140,7 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         webSettings.useWideViewPort = true
         webSettings.loadWithOverviewMode = true
 
-        webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html; charset=utf-8", "UTF-8", null)
     }
 
     private fun renderTags(tags: List<Term>){
