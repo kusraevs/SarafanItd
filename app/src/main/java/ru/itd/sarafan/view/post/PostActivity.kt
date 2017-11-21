@@ -32,6 +32,8 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import io.reactivex.subjects.PublishSubject
 import okhttp3.Route
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.rest.model.Category
 import ru.itd.sarafan.rest.model.tags.Term
@@ -110,16 +112,16 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         val post = state.post
         Glide.with(applicationContext).load(post.embedded.medias[0].imageUrl).into(ivPost)
         post.content?.let {
+
+            //val doc = Jsoup.parse(post.content.rendered)
+            //val elements = doc.getElementsByTag("iframe")
             val prefix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_prefix)
             val postfix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_postfix)
             val content = StringBuilder().append(prefix)
                     .append(post.content.rendered)
                     .append(postfix).toString()
-            val contentFullWidth = content.replace("width=\"607\"", "width=100%")
-                    .replace("width=\"853\"", "width=100%")
-                    .replace("amp;", "")
-                    .replace("//vk.com", "https://vk.com")
-            renderWebView(contentFullWidth)
+
+            renderWebView(content)
         }
         renderTags(post.embedded.getTagTerms())
         tvPostTitle.text = Html.fromHtml(post.title?.rendered)
@@ -175,11 +177,13 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
 
     override fun onResume() {
         super.onResume()
+        webView.onResume()
         navigatorHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
         super.onPause()
+        webView.onPause();
         navigatorHolder.removeNavigator()
     }
 

@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
 
     implementation 'ru.terrakok.cicerone:cicerone:2.1.0'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.7.2'
 
     // if you use the support libraries
 
