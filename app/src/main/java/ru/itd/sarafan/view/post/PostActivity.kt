@@ -140,7 +140,7 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         webSettings.useWideViewPort = true
         webSettings.loadWithOverviewMode = true
 
-        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html; charset=utf-8", "UTF-8", null)
+        webView.loadDataWithBaseURL("", html, "text/html; charset=utf-8", "UTF-8", null)
     }
 
     private fun renderTags(tags: List<Term>){

@@ -2,15 +2,13 @@ package ru.itd.sarafan.view.posts
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.businesslogic.ActivatedCategoriesManager
 import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
 import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
 import ru.itd.sarafan.rest.interactors.GetTagInteractor
 import ru.itd.sarafan.rest.interactors.LoadPostsInteractor
-import ru.itd.sarafan.rest.model.Categories
-import ru.itd.sarafan.rest.model.tags.Term
-import ru.itd.sarafan.view.main.MainPresenter
 import java.util.*
 import javax.inject.Inject
 
@@ -25,9 +23,6 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
     @Inject lateinit var activatedCategoriesManager: ActivatedCategoriesManager
 
 
-    private var categories: Categories? = null
-    private var tag: Term? = null
-    private var searchQuery: String? = null
     private var isLoading: Boolean = false
     private var hasMore: Boolean = true
 
@@ -37,36 +32,18 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
 
     override fun bindIntents() {
 
-        //val loadFirstPageObservable = intent(PostsView::loadFirstPageIntent)
+        val stateChangeObservable = Observable.combineLatest(createFiltersChangedObservable(), createLoadTriggerObservable(),
+                BiFunction<PostsFilter, TriggerLoadPageType, Pair<PostsFilter, TriggerLoadPageType>> { filter, triggerType ->
+                    Pair(filter, triggerType)
+                }
+        ).switchMap { (postsFilter, type) ->
+            when (type){
+                TriggerLoadPageType.FIRST_PAGE -> loadPosts.loadFirstPage(postsFilter.tag?.id, postsFilter.categories, postsFilter.searchQuery)
+                TriggerLoadPageType.NEXT_PAGE -> loadPosts.loadNextPage(postsFilter.tag?.id, postsFilter.categories, postsFilter.searchQuery)
+            }
+        }
 
-        val initTagObservable = intent(PostsView::startInitIntent)
-                .flatMap { getTagInteractor.execute() }
-                .doOnNext { tag = it }
-        val initCategoriesObservable = intent(PostsView::startInitIntent)
-                .flatMap { getCategoriesInteractor.execute() }
-                .doOnNext { this.categories = it }
-        val initSearchQueryObservable = intent(PostsView::startInitIntent)
-                .flatMap { getSearchQueryInteractor.execute() }
-                .doOnNext { this.searchQuery = it }
-
-        val initObservable = Observable.merge(initCategoriesObservable, initTagObservable, initSearchQueryObservable).take(1)
-
-        val categoriesChangedObservable = activatedCategoriesManager.subscribeToUpdates()
-                .doOnNext { this.categories = it }
-
-        val loadFirstPageObservable = Observable.merge(initObservable, categoriesChangedObservable)
-                .switchMap { loadPosts.loadFirstPage(tagId = tag?.id, categories = categories, searchQuery = searchQuery) }
-
-
-
-        val loadNextPageObservable = intent(PostsView::loadNextPageIntent)
-        val allLoadPagesObservable = loadNextPageObservable
-                .filter { !isLoading }
-                .filter { hasMore }
-                .flatMap { loadPosts.loadNextPage(tagId = tag?.id, categories = categories, searchQuery = searchQuery) }
-
-
-        val allIntentsObservable = Observable.merge(allLoadPagesObservable, loadFirstPageObservable)
+        val allIntentsObservable = stateChangeObservable
                 .scan(PostsViewState(), this::viewStateReducer)
                 .doOnNext {
                     isLoading = it.loading
@@ -86,10 +63,6 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
             is PartialPostsChanges.FirstPageLoaded -> {
                 state.copy(data = changes.posts, hasMore = changes.hasMore, loading = false)
             }
-            /*
-            is PartialPostsChanges.CategoriesUpdate -> {
-                state.copy(categories = changes.categories.categories)
-            }*/
             is PartialPostsChanges.FirstPageLoading -> state.copy(data = Collections.emptyList(), hasMore = true, error = null)
 
             is PartialPostsChanges.NextPageLoading -> {
@@ -109,8 +82,35 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
         }
     }
 
-    interface MainPresenterHolder {
-        fun getMainPresenter(): MainPresenter
+    private fun createLoadTriggerObservable(): Observable<TriggerLoadPageType>{
+        val triggerLoadFirstPageObservable =  intent(PostsView::loadFirstPageIntent).map { TriggerLoadPageType.FIRST_PAGE }
+        val triggerLoadNextPageObservable = intent(PostsView::loadNextPageIntent).map { TriggerLoadPageType.NEXT_PAGE }
+                .filter { !isLoading }
+                .filter { hasMore }
+        return Observable.merge(triggerLoadFirstPageObservable, triggerLoadNextPageObservable)
     }
 
+    private fun createFiltersChangedObservable(): Observable<PostsFilter> {
+
+        val initTagObservable = intent(PostsView::startInitIntent)
+                .flatMap { getTagInteractor.execute() }
+                .map { PostsFilterChange.TagChange(it) }
+
+        val initCategoriesObservable = intent(PostsView::startInitIntent)
+                .flatMap { getCategoriesInteractor.execute() }
+                .map { PostsFilterChange.CategoriesChange(it) }
+        val initSearchQueryObservable = intent(PostsView::startInitIntent)
+                .flatMap { getSearchQueryInteractor.execute() }
+                .map { PostsFilterChange.SearchQueryChange(it) }
+
+        val categoriesChangedObservable = activatedCategoriesManager.subscribeToUpdates()
+                .map { PostsFilterChange.CategoriesChange(it) }
+
+        return Observable.merge(categoriesChangedObservable, initCategoriesObservable, initTagObservable, initSearchQueryObservable)
+                        .scan(PostsFilter(), this::postsFilterReducer)
+    }
+
+    private enum class TriggerLoadPageType {
+        FIRST_PAGE, NEXT_PAGE
+    }
 }

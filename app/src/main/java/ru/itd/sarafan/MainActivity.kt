@@ -39,8 +39,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapter.RootCategoryClickListener,
-        PostsPresenter.MainPresenterHolder, MainView {
+class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapter.RootCategoryClickListener, MainView {
 
     @BindView(R.id.rv_root_categories) lateinit var rvRootCategories: RecyclerView
     @BindView(R.id.categories_spinner) lateinit var categoriesSpinner: AppCompatSpinner
@@ -98,9 +97,6 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
         drawer_layout.closeDrawer(GravityCompat.START)
         rootCategoryClickSubject.onNext(category)
     }
-
-    override fun getMainPresenter(): MainPresenter = presenter
-
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {

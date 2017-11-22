@@ -29,7 +29,7 @@
 
     @font-face {
             font-family: 'lato_regular';
-            src: url('fonts/lato_regular.ttf');
+            src: url('file:///android_asset/fonts/lato_regular.ttf');
     }
     </style>
     <style type='text/css'>

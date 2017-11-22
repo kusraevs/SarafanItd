@@ -28,7 +28,6 @@ class SplashActivity : MviActivity<SplashView, SplashPresenter>(), SplashView {
         if (state.data != null){
             goMain(state.data)
         }
-
     }
 
 
