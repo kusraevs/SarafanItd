@@ -1,4 +1,4 @@
-package ru.itd.sarafan.rest.interactors
+package ru.itd.sarafan.businesslogic.interactors
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.Observable

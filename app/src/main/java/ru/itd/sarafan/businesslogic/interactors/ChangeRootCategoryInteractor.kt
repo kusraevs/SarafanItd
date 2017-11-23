@@ -1,4 +1,4 @@
-package ru.itd.sarafan.rest.interactors
+package ru.itd.sarafan.businesslogic.interactors
 
 import io.reactivex.Observable
 import ru.itd.sarafan.SarafanApplication

@@ -2,9 +2,9 @@ package ru.itd.sarafan.view.main
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import io.reactivex.Observable
-import ru.itd.sarafan.rest.interactors.ChangeChildCategoryInteractor
-import ru.itd.sarafan.rest.interactors.ChangeRootCategoryInteractor
-import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.businesslogic.interactors.ChangeChildCategoryInteractor
+import ru.itd.sarafan.businesslogic.interactors.ChangeRootCategoryInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetCategoriesInteractor
 
 /**
  * Created by macbook on 23.10.17.

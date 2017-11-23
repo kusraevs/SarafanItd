@@ -4,9 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import ru.itd.sarafan.rest.PostsLoader
-import ru.itd.sarafan.rest.interactors.LoadPostsInteractor
-import ru.itd.sarafan.rest.model.tags.Term
-import ru.itd.sarafan.view.posts.PostsPresenter
+import ru.itd.sarafan.businesslogic.interactors.LoadPostsInteractor
 
 /**
  * Created by macbook on 17.10.17.

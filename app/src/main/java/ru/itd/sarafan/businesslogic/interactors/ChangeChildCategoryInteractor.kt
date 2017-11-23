@@ -1,4 +1,4 @@
-package ru.itd.sarafan.rest.interactors
+package ru.itd.sarafan.businesslogic.interactors
 
 import io.reactivex.Observable
 import ru.itd.sarafan.SarafanApplication
@@ -6,7 +6,6 @@ import ru.itd.sarafan.businesslogic.ActivatedCategoriesManager
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Category
 import ru.itd.sarafan.view.main.MainViewPartialStateChange
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**

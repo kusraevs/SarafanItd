@@ -1,4 +1,4 @@
-package ru.itd.sarafan.rest.interactors
+package ru.itd.sarafan.businesslogic.interactors
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -6,12 +6,8 @@ import io.reactivex.schedulers.Schedulers
 import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.businesslogic.CategoriesTreeBuilder
 import ru.itd.sarafan.rest.CategoriesLoader
-import ru.itd.sarafan.rest.PostsLoader
 import ru.itd.sarafan.rest.model.Categories
-import ru.itd.sarafan.rest.model.Category
 import ru.itd.sarafan.view.splash.SplashState
-import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**

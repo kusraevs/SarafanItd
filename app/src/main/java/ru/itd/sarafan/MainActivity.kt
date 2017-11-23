@@ -9,8 +9,6 @@ import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.view.View
-import android.widget.AdapterView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hannesdorfmann.mosby3.mvi.MviActivity
@@ -20,9 +18,9 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import ru.itd.sarafan.rest.interactors.ChangeChildCategoryInteractor
-import ru.itd.sarafan.rest.interactors.ChangeRootCategoryInteractor
-import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.businesslogic.interactors.ChangeChildCategoryInteractor
+import ru.itd.sarafan.businesslogic.interactors.ChangeRootCategoryInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetCategoriesInteractor
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Category
 import ru.itd.sarafan.utils.FragmentUtils
@@ -34,7 +32,6 @@ import ru.itd.sarafan.view.main.MainView
 import ru.itd.sarafan.view.main.MainViewState
 import ru.itd.sarafan.view.posts.PostsActivity
 import ru.itd.sarafan.view.posts.PostsFragment
-import ru.itd.sarafan.view.posts.PostsPresenter
 import java.util.*
 import kotlin.collections.ArrayList
 

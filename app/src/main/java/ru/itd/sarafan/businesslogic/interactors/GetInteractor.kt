@@ -1,7 +1,6 @@
-package ru.itd.sarafan.rest.interactors
+package ru.itd.sarafan.businesslogic.interactors
 
 import io.reactivex.Observable
-import ru.itd.sarafan.rest.model.Categories
 
 /**
  * Created by macbook on 23.10.17.

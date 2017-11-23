@@ -1,6 +1,5 @@
 package ru.itd.sarafan.view.posts
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -15,9 +14,10 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import ru.itd.sarafan.R
-import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
-import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
-import ru.itd.sarafan.rest.interactors.GetTagInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetSearchQueryInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetTagInteractor
+import ru.itd.sarafan.businesslogic.interactors.SubscribeToCategoriesInteractor
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Post
 import ru.itd.sarafan.rest.model.tags.Term
@@ -57,7 +57,8 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
         val searchQuery = arguments?.getString(ARG_SEARCH_QUERY)
         return PostsPresenter(GetTagInteractor(tagTerm),
                 GetCategoriesInteractor(categories),
-                GetSearchQueryInteractor(searchQuery))
+                GetSearchQueryInteractor(searchQuery),
+                SubscribeToCategoriesInteractor())
     }
 
     override fun loadFirstPageIntent(): Observable<Boolean> {

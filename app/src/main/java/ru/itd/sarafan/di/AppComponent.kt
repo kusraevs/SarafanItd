@@ -2,14 +2,10 @@ package ru.itd.sarafan.di
 
 import dagger.Component
 import ru.itd.sarafan.MainActivity
-import ru.itd.sarafan.businesslogic.ActivatedCategoriesManager
+import ru.itd.sarafan.businesslogic.interactors.*
 import ru.itd.sarafan.rest.CategoriesLoader
 import ru.itd.sarafan.view.posts.PostsFragment
 import ru.itd.sarafan.rest.PostsLoader
-import ru.itd.sarafan.rest.interactors.ChangeChildCategoryInteractor
-import ru.itd.sarafan.rest.interactors.ChangeRootCategoryInteractor
-import ru.itd.sarafan.rest.interactors.LoadCategoriesInteractor
-import ru.itd.sarafan.rest.interactors.LoadPostsInteractor
 import ru.itd.sarafan.view.post.PostActivity
 import ru.itd.sarafan.view.post.PostPresenter
 import ru.itd.sarafan.view.posts.PostsPresenter
@@ -39,6 +35,7 @@ interface AppComponent {
     //fun inject(activatedCategoriesManager: ActivatedCategoriesManager)
     fun inject(changeChildCategoryInteractor: ChangeChildCategoryInteractor)
     fun inject(changeRootCategoryInteractor: ChangeRootCategoryInteractor)
+    fun inject(subscribeToCategoriesInteractor: SubscribeToCategoriesInteractor)
 
     fun inject(mainActivity: MainActivity)
 }
