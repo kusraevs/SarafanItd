@@ -20,4 +20,32 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    
+    <style name="Body">
+        <item name="android:textColor">@color/font_grey_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/lato_regular</item>
+    </style>
+
+    <style name="BodyBold" parent="@style/Body">
+        <item name="android:fontFamily">@font/lato_bold</item>
+    </style>
+
+
+    <style name="TitleBig">
+        <item name="android:textColor">@color/font_black_color</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/lato_bold</item>
+    </style>
+
+    <style name="TitleSmall">
+        <item name="android:textColor">@color/font_black_color</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/lato_bold</item>
+    </style>
+
+
 </resources>

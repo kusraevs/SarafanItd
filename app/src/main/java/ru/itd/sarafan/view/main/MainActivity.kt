@@ -1,4 +1,4 @@
-package ru.itd.sarafan
+package ru.itd.sarafan.view.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,6 +18,8 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import ru.itd.sarafan.R
+import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.businesslogic.interactors.ChangeChildCategoryInteractor
 import ru.itd.sarafan.businesslogic.interactors.ChangeRootCategoryInteractor
 import ru.itd.sarafan.businesslogic.interactors.GetCategoriesInteractor
@@ -27,9 +29,6 @@ import ru.itd.sarafan.utils.FragmentUtils
 import ru.itd.sarafan.utils.RouterUtils
 import ru.itd.sarafan.view.adapter.CategoriesSpinnerAdapter
 import ru.itd.sarafan.view.drawer.RootCategoriesAdapter
-import ru.itd.sarafan.view.main.MainPresenter
-import ru.itd.sarafan.view.main.MainView
-import ru.itd.sarafan.view.main.MainViewState
 import ru.itd.sarafan.view.posts.PostsActivity
 import ru.itd.sarafan.view.posts.PostsFragment
 import java.util.*

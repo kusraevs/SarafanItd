@@ -15,5 +15,7 @@ abstract class LoadingPostsModel: EpoxyModelWithHolder<LoadingPostsModel.Loading
 
     override fun createNewHolder() = LoadingPostsHolder()
 
+    override fun getSpanSize(totalSpanCount: Int, position: Int, itemCount: Int) = totalSpanCount
+
     class LoadingPostsHolder : BaseEpoxyHolder()
 }

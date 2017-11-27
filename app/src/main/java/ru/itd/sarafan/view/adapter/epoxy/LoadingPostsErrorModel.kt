@@ -22,6 +22,9 @@ abstract class LoadingPostsErrorModel : EpoxyModelWithHolder<LoadingPostsErrorMo
     override fun bind(holder: LoadingPostsErrorHolder) {
         holder.loadAgainView.setOnClickListener { clickListener?.onLoadingPostErrorClick() }
     }
+
+    override fun getSpanSize(totalSpanCount: Int, position: Int, itemCount: Int) = totalSpanCount
+
     class LoadingPostsErrorHolder : BaseEpoxyHolder() {
         @BindView(R.id.b_load_again) lateinit var loadAgainView: View
 

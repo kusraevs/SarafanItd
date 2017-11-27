@@ -32,16 +32,13 @@
         tools:layout_height="50dp"/>
 
     <TextView
+        style="@style/TitleSmall"
         android:id="@+id/tv_post_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="12dp"
-        android:fontFamily="@font/lato_bold"
-        android:textColor="@color/font_black_color"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:lineSpacingExtra="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
@@ -50,15 +47,13 @@
         tools:text="@string/default_post_title" />
 
     <TextView
+        style="@style/Body"
         android:id="@+id/tv_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="9dp"
-        android:fontFamily="@font/lato_regular"
-        android:textColor="@color/font_grey_color"
-        android:textSize="14sp"
         android:maxLines="4"
         android:ellipsize="end"
         android:lineSpacingExtra="4dp"

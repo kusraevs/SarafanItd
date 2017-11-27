@@ -1,7 +1,7 @@
 package ru.itd.sarafan.di
 
 import dagger.Component
-import ru.itd.sarafan.MainActivity
+import ru.itd.sarafan.view.main.MainActivity
 import ru.itd.sarafan.businesslogic.interactors.*
 import ru.itd.sarafan.rest.CategoriesLoader
 import ru.itd.sarafan.view.posts.PostsFragment

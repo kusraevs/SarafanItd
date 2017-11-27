@@ -9,8 +9,10 @@ import com.airbnb.epoxy.EpoxyHolder
  * Created by macbook on 19.10.17.
  */
 abstract class BaseEpoxyHolder : EpoxyHolder() {
+    lateinit var itemView: View
     @CallSuper
     override fun bindView(itemView: View) {
+        this.itemView = itemView
         ButterKnife.bind(this, itemView)
     }
 }
