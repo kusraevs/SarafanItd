@@ -2,15 +2,9 @@ package ru.itd.sarafan.view.posts
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import ru.itd.sarafan.SarafanApplication
-import ru.itd.sarafan.businesslogic.ActivatedCategoriesManager
-import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
-import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
-import ru.itd.sarafan.rest.interactors.GetTagInteractor
-import ru.itd.sarafan.rest.interactors.LoadPostsInteractor
-import ru.itd.sarafan.rest.model.Categories
-import ru.itd.sarafan.rest.model.tags.Term
-import ru.itd.sarafan.view.main.MainPresenter
+import ru.itd.sarafan.businesslogic.interactors.*
 import java.util.*
 import javax.inject.Inject
 
@@ -19,17 +13,10 @@ import javax.inject.Inject
  */
 class PostsPresenter(private val getTagInteractor: GetTagInteractor,
                      private val getCategoriesInteractor: GetCategoriesInteractor,
-                     private val getSearchQueryInteractor: GetSearchQueryInteractor) : MviBasePresenter<PostsView, PostsViewState>() {
+                     private val getSearchQueryInteractor: GetSearchQueryInteractor,
+                     private val subscribeToCategoriesInteractor: SubscribeToCategoriesInteractor) : MviBasePresenter<PostsView, PostsViewState>() {
 
     @Inject lateinit var loadPosts: LoadPostsInteractor
-    @Inject lateinit var activatedCategoriesManager: ActivatedCategoriesManager
-
-
-    private var categories: Categories? = null
-    private var tag: Term? = null
-    private var searchQuery: String? = null
-    private var isLoading: Boolean = false
-    private var hasMore: Boolean = true
 
     init {
         SarafanApplication.getComponent().inject(this)
@@ -37,41 +24,21 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
 
     override fun bindIntents() {
 
-        //val loadFirstPageObservable = intent(PostsView::loadFirstPageIntent)
+        val loadTriggerObservable = createLoadTriggerObservable()
+        val filtersChangedObservable = createFiltersChangedObservable()
 
-        val initTagObservable = intent(PostsView::startInitIntent)
-                .flatMap { getTagInteractor.execute() }
-                .doOnNext { tag = it }
-        val initCategoriesObservable = intent(PostsView::startInitIntent)
-                .flatMap { getCategoriesInteractor.execute() }
-                .doOnNext { this.categories = it }
-        val initSearchQueryObservable = intent(PostsView::startInitIntent)
-                .flatMap { getSearchQueryInteractor.execute() }
-                .doOnNext { this.searchQuery = it }
-
-        val initObservable = Observable.merge(initCategoriesObservable, initTagObservable, initSearchQueryObservable).take(1)
-
-        val categoriesChangedObservable = activatedCategoriesManager.subscribeToUpdates()
-                .doOnNext { this.categories = it }
-
-        val loadFirstPageObservable = Observable.merge(initObservable, categoriesChangedObservable)
-                .switchMap { loadPosts.loadFirstPage(tagId = tag?.id, categories = categories, searchQuery = searchQuery) }
-
-
-
-        val loadNextPageObservable = intent(PostsView::loadNextPageIntent)
-        val allLoadPagesObservable = loadNextPageObservable
-                .filter { !isLoading }
-                .filter { hasMore }
-                .flatMap { loadPosts.loadNextPage(tagId = tag?.id, categories = categories, searchQuery = searchQuery) }
-
-
-        val allIntentsObservable = Observable.merge(allLoadPagesObservable, loadFirstPageObservable)
-                .scan(PostsViewState(), this::viewStateReducer)
-                .doOnNext {
-                    isLoading = it.loading
-                    hasMore = it.hasMore
+        val stateChangeObservable = loadTriggerObservable.withLatestFrom(filtersChangedObservable,
+                BiFunction<TriggerLoadPageType, PostsFilter, Pair<TriggerLoadPageType, PostsFilter>> { triggerType, filter ->
+                    Pair(triggerType, filter)
                 }
+        ).switchMap { (type, postsFilter) ->
+            when (type) {
+                TriggerLoadPageType.FIRST_PAGE -> loadPosts.loadFirstPage(postsFilter.tag?.id, postsFilter.categories, postsFilter.searchQuery)
+                TriggerLoadPageType.NEXT_PAGE -> loadPosts.loadNextPage(postsFilter.tag?.id, postsFilter.categories, postsFilter.searchQuery)
+            }
+        }
+
+        val allIntentsObservable = stateChangeObservable.scan(PostsViewState(), this::viewStateReducer)
 
         subscribeViewState(allIntentsObservable, PostsView::render)
     }
@@ -86,10 +53,6 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
             is PartialPostsChanges.FirstPageLoaded -> {
                 state.copy(data = changes.posts, hasMore = changes.hasMore, loading = false)
             }
-            /*
-            is PartialPostsChanges.CategoriesUpdate -> {
-                state.copy(categories = changes.categories.categories)
-            }*/
             is PartialPostsChanges.FirstPageLoading -> state.copy(data = Collections.emptyList(), hasMore = true, error = null)
 
             is PartialPostsChanges.NextPageLoading -> {
@@ -102,15 +65,42 @@ class PostsPresenter(private val getTagInteractor: GetTagInteractor,
     }
 
     private fun postsFilterReducer(filter: PostsFilter, change: PostsFilterChange): PostsFilter {
-        return when (change){
+        return when (change) {
             is PostsFilterChange.CategoriesChange -> filter.copy(categories = change.categories)
             is PostsFilterChange.TagChange -> filter.copy(tag = change.tagTerm)
             is PostsFilterChange.SearchQueryChange -> filter
         }
     }
 
-    interface MainPresenterHolder {
-        fun getMainPresenter(): MainPresenter
+    private fun createLoadTriggerObservable(): Observable<TriggerLoadPageType> {
+        val triggerLoadFirstPageObservable = intent(PostsView::loadFirstPageIntent).map { TriggerLoadPageType.FIRST_PAGE }
+        val triggerLoadNextPageObservable = intent(PostsView::loadNextPageIntent).map { TriggerLoadPageType.NEXT_PAGE }
+        val triggerLoadCategoriesChangedObservable = subscribeToCategoriesInteractor.execute().map { TriggerLoadPageType.FIRST_PAGE }
+
+        return Observable.merge(triggerLoadFirstPageObservable, triggerLoadNextPageObservable, triggerLoadCategoriesChangedObservable)
     }
 
+    private fun createFiltersChangedObservable(): Observable<PostsFilter> {
+
+        val initTagObservable = intent(PostsView::startInitIntent)
+                .flatMap { getTagInteractor.execute() }
+                .map { PostsFilterChange.TagChange(it) }
+
+        val initCategoriesObservable = intent(PostsView::startInitIntent)
+                .flatMap { getCategoriesInteractor.execute() }
+                .map { PostsFilterChange.CategoriesChange(it) }
+        val initSearchQueryObservable = intent(PostsView::startInitIntent)
+                .flatMap { getSearchQueryInteractor.execute() }
+                .map { PostsFilterChange.SearchQueryChange(it) }
+
+        val categoriesChangedObservable = subscribeToCategoriesInteractor.execute()
+                .map { PostsFilterChange.CategoriesChange(it) }
+
+        return Observable.merge(categoriesChangedObservable, initCategoriesObservable, initTagObservable, initSearchQueryObservable)
+                .scan(PostsFilter(), this::postsFilterReducer)
+    }
+
+    private enum class TriggerLoadPageType {
+        FIRST_PAGE, NEXT_PAGE
+    }
 }

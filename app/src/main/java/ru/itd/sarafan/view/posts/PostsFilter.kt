@@ -6,4 +6,4 @@ import ru.itd.sarafan.rest.model.tags.Term
 /**
  * Created by macbook on 26.10.17.
  */
-data class PostsFilter(val categories: Categories? = null, val tag: Term? = null, val searchQuery: String? = null)
+data class PostsFilter(var categories: Categories? = null, var tag: Term? = null, var searchQuery: String? = null)

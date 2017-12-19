@@ -21,7 +21,7 @@ class PostsController(val clickListener: ItemClickListener? = null): Typed3Epoxy
                     .clickListener(clickListener)
                     .addTo(this)
         }
-        loader.addIf(showLoading, this);
+        loader.addIf(showLoading, this)
         error.clickListener(clickListener).addIf(showError, this)
     }
 

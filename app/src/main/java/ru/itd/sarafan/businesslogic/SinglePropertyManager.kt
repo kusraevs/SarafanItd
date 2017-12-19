@@ -2,6 +2,7 @@ package ru.itd.sarafan.businesslogic
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 
 
 /**
@@ -15,7 +16,7 @@ open class SinglePropertyManager<T> {
         return Observable.just(value)
     }
 
-    fun subscribeToUpdates(): Observable<T> {
+    fun subscribeToUpdates(): Subject<T> {
         return updatePublisher
     }
 

@@ -9,5 +9,5 @@ import ru.itd.sarafan.rest.model.Category
 data class MainViewState(val data: Categories? = null,
                          val rootCategory: Category? = null,
                          val childCategory : Category? = null,
-                         val navigateToSearchWithQuery: String = "") {
-}
+                         val navigateToSearchWithQuery: String = "",
+                         val isDenominator: Boolean? = null)

@@ -9,7 +9,8 @@ import ru.itd.sarafan.rest.model.Category
  */
 interface MainView: MvpView {
 
-    fun startLoadingObservable(): Observable<Boolean>
+    fun startLoadingIntent(): Observable<Boolean>
+    fun getCurrentWeekTypeIntent(): Observable<Boolean>
 
     fun rootCategorySelected(): Observable<Category>
     fun childCategorySelected(): Observable<Category>

@@ -1,16 +1,16 @@
-package ru.itd.sarafan
+package ru.itd.sarafan.view.main
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.view.View
-import android.widget.AdapterView
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.hannesdorfmann.mosby3.mvi.MviActivity
@@ -20,31 +20,31 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import ru.itd.sarafan.rest.interactors.ChangeChildCategoryInteractor
-import ru.itd.sarafan.rest.interactors.ChangeRootCategoryInteractor
-import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.R
+import ru.itd.sarafan.SarafanApplication
+import ru.itd.sarafan.businesslogic.interactors.ChangeChildCategoryInteractor
+import ru.itd.sarafan.businesslogic.interactors.ChangeRootCategoryInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetWeekTypeInteractor
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Category
 import ru.itd.sarafan.utils.FragmentUtils
 import ru.itd.sarafan.utils.RouterUtils
 import ru.itd.sarafan.view.adapter.CategoriesSpinnerAdapter
 import ru.itd.sarafan.view.drawer.RootCategoriesAdapter
-import ru.itd.sarafan.view.main.MainPresenter
-import ru.itd.sarafan.view.main.MainView
-import ru.itd.sarafan.view.main.MainViewState
 import ru.itd.sarafan.view.posts.PostsActivity
 import ru.itd.sarafan.view.posts.PostsFragment
-import ru.itd.sarafan.view.posts.PostsPresenter
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapter.RootCategoryClickListener,
-        PostsPresenter.MainPresenterHolder, MainView {
+class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapter.RootCategoryClickListener, MainView {
 
     @BindView(R.id.rv_root_categories) lateinit var rvRootCategories: RecyclerView
     @BindView(R.id.categories_spinner) lateinit var categoriesSpinner: AppCompatSpinner
     @BindView(R.id.search_view) lateinit var searchView: SearchView
+    @BindView(R.id.nav_view) lateinit var navView: NavigationView
+    lateinit var tvIsDenominator: TextView
 
     private val rootCategoryClickSubject = PublishSubject.create<Category>()
     private val searchQuerySubmittedSubject = PublishSubject.create<String>()
@@ -57,6 +57,7 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
+        tvIsDenominator = navView.getHeaderView(0).findViewById(R.id.tv_is_denominator)
         setSupportActionBar(toolbar)
         SarafanApplication.getComponent().inject(this)
 
@@ -80,7 +81,8 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
 
     override fun createPresenter(): MainPresenter {
         val categories = intent.getSerializableExtra(RouterUtils.CATEGORIES_INTENT_KEY) as Categories
-        presenter = MainPresenter(GetCategoriesInteractor(categories), ChangeRootCategoryInteractor(), ChangeChildCategoryInteractor())
+        presenter = MainPresenter(GetCategoriesInteractor(categories), ChangeRootCategoryInteractor(),
+                ChangeChildCategoryInteractor(), GetWeekTypeInteractor())
         return presenter
     }
 
@@ -99,9 +101,6 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
         rootCategoryClickSubject.onNext(category)
     }
 
-    override fun getMainPresenter(): MainPresenter = presenter
-
-
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -110,7 +109,9 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
         }
     }
 
-    override fun startLoadingObservable(): Observable<Boolean> = Observable.just(true)
+    override fun startLoadingIntent(): Observable<Boolean> = Observable.just(true)
+    override fun getCurrentWeekTypeIntent(): Observable<Boolean> = Observable.just(true)
+
     override fun rootCategorySelected(): Observable<Category> = rootCategoryClickSubject
     override fun childCategorySelected(): Observable<Category> =
             RxAdapterView.itemSelections(categoriesSpinner)
@@ -133,6 +134,16 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), RootCategoriesAdapt
             intent.putExtra(PostsFragment.ARG_SEARCH_QUERY, state.navigateToSearchWithQuery)
             startActivity(intent)
             searchQuerySubmittedSubject.onNext("")
+        }
+
+        if (state.isDenominator != null) {
+            val typeStr = getString(
+                    if (state.isDenominator)
+                        R.string.denominator_type
+                    else
+                        R.string.numerator_type
+            )
+            tvIsDenominator.text = typeStr
         }
     }
 

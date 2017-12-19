@@ -1,4 +1,4 @@
-package ru.itd.sarafan.rest.interactors
+package ru.itd.sarafan.businesslogic.interactors
 
 import io.reactivex.Observable
 import ru.itd.sarafan.SarafanApplication
@@ -28,7 +28,7 @@ class ChangeRootCategoryInteractor {
     }
 
     private fun getChildsListWithParentAtTheStart(category: Category): List<Category>{
-        return if (category.childs == null || category.childs.isEmpty())
+        return if (category.childs.isEmpty())
             listOf(category)
         else
             listOf(category) + category.childs

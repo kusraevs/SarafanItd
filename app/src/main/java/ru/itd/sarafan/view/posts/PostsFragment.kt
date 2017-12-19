@@ -1,8 +1,8 @@
 package ru.itd.sarafan.view.posts
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -15,9 +15,10 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import ru.itd.sarafan.R
-import ru.itd.sarafan.rest.interactors.GetCategoriesInteractor
-import ru.itd.sarafan.rest.interactors.GetSearchQueryInteractor
-import ru.itd.sarafan.rest.interactors.GetTagInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetSearchQueryInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetTagInteractor
+import ru.itd.sarafan.businesslogic.interactors.SubscribeToCategoriesInteractor
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Post
 import ru.itd.sarafan.rest.model.tags.Term
@@ -26,9 +27,7 @@ import ru.itd.sarafan.view.post.PostActivity
 
 
 class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, PostsController.ItemClickListener {
-    override fun loadAgainIntent(): Observable<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun loadAgainIntent(): Observable<Boolean> = loadAgainPublishSubject
 
     private val visibleThreshold = 5
 
@@ -38,6 +37,7 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
     private lateinit var layoutManager: LinearLayoutManager
 
     private val loadAgainPublishSubject = PublishSubject.create<Boolean>()
+    private var isLoading: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,8 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
         val searchQuery = arguments?.getString(ARG_SEARCH_QUERY)
         return PostsPresenter(GetTagInteractor(tagTerm),
                 GetCategoriesInteractor(categories),
-                GetSearchQueryInteractor(searchQuery))
+                GetSearchQueryInteractor(searchQuery),
+                SubscribeToCategoriesInteractor())
     }
 
     override fun loadFirstPageIntent(): Observable<Boolean> {
@@ -69,12 +70,14 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
         return RxRecyclerView.scrollStateChanges(rvPosts)
                 .filter { event -> event == RecyclerView.SCROLL_STATE_IDLE }
                 .filter({ layoutManager.findLastVisibleItemPosition() > postsController.adapter.itemCount - visibleThreshold })
-                .filter { postsController.loader.isShown }
+                .filter{ !isLoading }
+                //.filter { postsController.loader.isShown }
                 .map { true }
                 .mergeWith(loadAgainPublishSubject)
     }
 
     override fun render(state: PostsViewState) {
+        this.isLoading = state.loading
         renderData(state.data, state.hasMore && state.error == null, state.error != null)
     }
 
@@ -84,11 +87,17 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
 
 
     private fun setUpRecyclerView(){
-        rvPosts.setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(context)
-        rvPosts.layoutManager = layoutManager
-        rvPosts.addItemDecoration(SpacesItemDecoration(24))
+        val spanCount = resources.getInteger(R.integer.posts_columns_count)
         postsController = PostsController(this)
+        postsController.spanCount = spanCount
+
+        rvPosts.setHasFixedSize(true)
+        val gridLayoutManager = GridLayoutManager(context, spanCount)
+        gridLayoutManager.spanSizeLookup = postsController.spanSizeLookup;
+        layoutManager = gridLayoutManager
+        rvPosts.layoutManager = gridLayoutManager
+        rvPosts.addItemDecoration(SpacesItemDecoration(24))
+
         rvPosts.adapter = postsController.adapter
         rvPosts.adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

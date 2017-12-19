@@ -11,6 +11,6 @@ sealed class MainViewPartialStateChange {
     data class RootCategoryChanged(val rootCategory: Category, val newChildCategory: Category?) : MainViewPartialStateChange()
     data class ChildCategoryChanged(val childCategory: Category) : MainViewPartialStateChange()
     data class SearchQueryChanged(val query: String) : MainViewPartialStateChange()
-
+    data class IsDenominatorChanged(val isDenominator: Boolean) : MainViewPartialStateChange()
 }
 

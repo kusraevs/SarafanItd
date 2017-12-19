@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.itd.sarafan.MainActivity">
+    tools:context="ru.itd.sarafan.view.main.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

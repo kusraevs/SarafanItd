@@ -37,11 +37,13 @@ import org.jsoup.nodes.Document
 import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.rest.model.Category
 import ru.itd.sarafan.rest.model.tags.Term
+import ru.itd.sarafan.utils.DateUtils
 import ru.itd.sarafan.utils.ResourceFile
 import ru.itd.sarafan.utils.RouterUtils
 import ru.itd.sarafan.utils.goShare
 import ru.itd.sarafan.view.adapter.PostTagsAdapter
 import ru.itd.sarafan.view.adapter.TagsAdapter
+import ru.itd.sarafan.view.editorship.EditorshipActivity
 import ru.itd.sarafan.view.posts.PostsActivity
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -58,6 +60,9 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
     @BindView(R.id.progress_bar) lateinit var progressBar: ProgressBar
     @BindView(R.id.rv_tags) lateinit var rvTags: EpoxyRecyclerView
     @BindView(R.id.tv_post_title) lateinit var tvPostTitle: TextView
+    @BindView(R.id.post_footer_view_layout) lateinit var postFooterViewLayout: View
+    @BindView(R.id.tv_date) lateinit var tvDate: TextView
+    @BindView(R.id.tv_details) lateinit var tvDetails: TextView
 
     private val shareClickSubject = PublishSubject.create<Boolean>()
 
@@ -65,10 +70,12 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         override fun onPageStarted(webView: WebView, url: String, favicon: Bitmap?) {
             progressBar.visibility = View.VISIBLE
             webView.visibility = View.GONE
+            postFooterViewLayout.visibility = View.GONE
         }
         override fun onPageFinished(webView: WebView, url: String) {
             progressBar.visibility = View.GONE
             webView.visibility = View.VISIBLE
+            postFooterViewLayout.visibility = View.VISIBLE
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
@@ -103,6 +110,10 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         rvTags.setHasFixedSize(true)
         rvTags.isNestedScrollingEnabled = false
 
+        tvDetails.setOnClickListener {
+            val intent = Intent(this, EditorshipActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun createPresenter(): PostPresenter = PostPresenter(intent.getSerializableExtra(PostsFragment.ARG_POST) as Post)
@@ -112,9 +123,6 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         val post = state.post
         Glide.with(applicationContext).load(post.embedded.medias[0].imageUrl).into(ivPost)
         post.content?.let {
-
-            //val doc = Jsoup.parse(post.content.rendered)
-            //val elements = doc.getElementsByTag("iframe")
             val prefix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_prefix)
             val postfix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_postfix)
             val content = StringBuilder().append(prefix)
@@ -125,10 +133,11 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         }
         renderTags(post.embedded.getTagTerms())
         tvPostTitle.text = Html.fromHtml(post.title?.rendered)
-
+        tvDate.text = DateUtils.formatDate(post.dateGmt)
     }
 
     private fun renderWebView(html: String) {
+
         //webView.setInitialScale(190)
         webView.webViewClient = webViewClient
         webView.webChromeClient = WebChromeClient()
@@ -139,7 +148,7 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         webSettings.useWideViewPort = true
         webSettings.loadWithOverviewMode = true
 
-        webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+        webView.loadDataWithBaseURL("", html, "text/html; charset=utf-8", "UTF-8", null)
     }
 
     private fun renderTags(tags: List<Term>){

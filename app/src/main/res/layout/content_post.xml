@@ -27,16 +27,14 @@
             tools:layout_height="50dp" />
 
         <TextView
+            style="@style/TitleBig"
             android:id="@+id/tv_post_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:layout_marginTop="4dp"
-            android:fontFamily="@font/lato_bold"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textColor="@color/font_black_color"
-            android:textSize="24sp"
             tools:text="@string/default_post_title" />
 
         <FrameLayout
@@ -59,5 +57,24 @@
                 android:scrollbars="none"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </FrameLayout>
+
+        <TextView
+            style="@style/Body"
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@color/font_grey_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_text"
+            tools:text="41 минуту назад" />
+
+        <include
+            android:id="@+id/post_footer_view_layout"
+            layout="@layout/post_footer_view_layout"/>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

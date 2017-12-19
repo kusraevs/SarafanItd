@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/tv_editorship"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/lato_bold"
+        android:lineSpacingExtra="2dp"
+        android:text="@string/editorship"
+        android:textColor="@color/font_black_color"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="4"
+        android:text="@string/first_author"
+        android:textSize="14sp" />
+
+
+    <TextView
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="4"
+        android:text="@string/first_author_title"
+        android:textSize="14sp"
+        android:textStyle="italic" />
+
+    <TextView
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="4"
+        android:text="@string/second_author"
+        android:textSize="14sp" />
+
+
+    <TextView
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="4"
+        android:text="@string/second_author_title"
+        android:textSize="14sp"
+        android:textStyle="italic" />
+
+    <TextView
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="4"
+        android:text="@string/third_author"
+        android:textSize="14sp" />
+
+
+    <TextView
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="4"
+        android:text="@string/third_author_title"
+        android:textSize="14sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/tv_details"
+        style="@style/BodyBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="24dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="4"
+        android:text="@string/details"
+        android:textColor="@color/colorAccent" />
+
+</LinearLayout>

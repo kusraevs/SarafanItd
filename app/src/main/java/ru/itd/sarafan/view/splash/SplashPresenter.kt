@@ -2,10 +2,8 @@ package ru.itd.sarafan.view.splash
 
 import com.hannesdorfmann.mosby3.mvi.MviBasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import ru.itd.sarafan.SarafanApplication
-import ru.itd.sarafan.rest.interactors.LoadCategoriesInteractor
+import ru.itd.sarafan.businesslogic.interactors.LoadCategoriesInteractor
 import javax.inject.Inject
 
 /**

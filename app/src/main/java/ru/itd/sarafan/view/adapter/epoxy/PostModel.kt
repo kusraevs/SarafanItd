@@ -51,7 +51,6 @@ abstract class PostModel : EpoxyModelWithHolder<PostModel.PostViewHolder>() {
         rvTags.swapAdapter(tagsAdapter, false)
         rvTags.setHasFixedSize(true)
         rvTags.isNestedScrollingEnabled = false
-
     }
 
 
