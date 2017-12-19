@@ -1,6 +1,7 @@
 package ru.itd.sarafan.rest.model
 
 import java.io.Serializable
+import java.util.*
 
 data class Category(val id: Int = 0,
                     val count: Int = 0,
@@ -10,7 +11,7 @@ data class Category(val id: Int = 0,
                     val slug: String = "",
                     val taxonomy: String = "",
                     val parent: Int = 0,
-                    val childs: List<Category>?): Serializable {
+                    val childs: List<Category> = Collections.emptyList()): Serializable {
 
     override fun toString(): String {
         return name

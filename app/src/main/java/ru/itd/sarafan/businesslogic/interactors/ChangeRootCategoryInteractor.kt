@@ -28,7 +28,7 @@ class ChangeRootCategoryInteractor {
     }
 
     private fun getChildsListWithParentAtTheStart(category: Category): List<Category>{
-        return if (category.childs == null || category.childs.isEmpty())
+        return if (category.childs.isEmpty())
             listOf(category)
         else
             listOf(category) + category.childs

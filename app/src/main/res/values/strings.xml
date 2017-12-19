@@ -17,11 +17,21 @@
     <string name="editorship">Наша редакция</string>
 
     <string name="first_author">Короткова Надежда</string>
-    <string name="first_author_title">Ответственный секретарь</string>
+    <string name="first_author_title">Редактор</string>
     <string name="second_author">Канова Екатерина</string>
-    <string name="second_author_title">Главный редактор</string>
+    <string name="second_author_title">Редактор</string>
     <string name="third_author">Гандрабура Ольга</string>
-    <string name="third_author_title">Руководитель проекта</string>
+    <string name="third_author_title">Главный редактор</string>
+    <string name="fourth_author">Валерия Табуренко</string>
+    <string name="fourth_author_title">Графический дизайнер</string>
+    <string name="fifth_author">Игорь Трамбовкин</string>
+    <string name="fifth_author_title">Видеооператор</string>
+    <string name="sixth_author">Елизавета Демина</string>
+    <string name="sixth_author_title">Фотограф</string>
+
+
     <string name="details">Подробнее</string>
+    <string name="denominator_type">Знаменатель</string>
+    <string name="numerator_type">Числитель</string>
 
 </resources>

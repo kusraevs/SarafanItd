@@ -71,7 +71,7 @@ class PostsFragment : MviFragment<PostsView, PostsPresenter>(), PostsView, Posts
                 .filter { event -> event == RecyclerView.SCROLL_STATE_IDLE }
                 .filter({ layoutManager.findLastVisibleItemPosition() > postsController.adapter.itemCount - visibleThreshold })
                 .filter{ !isLoading }
-                .filter { postsController.loader.isShown }
+                //.filter { postsController.loader.isShown }
                 .map { true }
                 .mergeWith(loadAgainPublishSubject)
     }

@@ -5,19 +5,24 @@ import io.reactivex.Observable
 import ru.itd.sarafan.businesslogic.interactors.ChangeChildCategoryInteractor
 import ru.itd.sarafan.businesslogic.interactors.ChangeRootCategoryInteractor
 import ru.itd.sarafan.businesslogic.interactors.GetCategoriesInteractor
+import ru.itd.sarafan.businesslogic.interactors.GetWeekTypeInteractor
 
 /**
  * Created by macbook on 23.10.17.
  */
 class MainPresenter(private val getCategoriesInteractor: GetCategoriesInteractor,
                     private val changeRootCategoryInteractor: ChangeRootCategoryInteractor,
-                    private val changeChildCategoryInteractor: ChangeChildCategoryInteractor): MviBasePresenter<MainView, MainViewState>() {
+                    private val changeChildCategoryInteractor: ChangeChildCategoryInteractor,
+                    private val getWeekTypeInteractor: GetWeekTypeInteractor): MviBasePresenter<MainView, MainViewState>() {
 
     override fun bindIntents() {
 
-        val getCategoriesObservable = intent(MainView::startLoadingObservable)
+        val getCategoriesObservable = intent(MainView::startLoadingIntent)
                 .flatMap { getCategoriesInteractor.execute() }
                 .map { MainViewPartialStateChange.CategoriesLoaded(data = it) as MainViewPartialStateChange }
+
+        val isDenominatorChangedObservable = intent(MainView::getCurrentWeekTypeIntent).flatMap { getWeekTypeInteractor.execute() }
+                .map { MainViewPartialStateChange.IsDenominatorChanged(it) }
 
         val changeRootCategoryObservable = intent(MainView::rootCategorySelected)
         val changeChildCategoryObservable = intent(MainView::childCategorySelected)
@@ -31,7 +36,8 @@ class MainPresenter(private val getCategoriesInteractor: GetCategoriesInteractor
                 }
 
         val searchTextSubmittedObservable = intent(MainView::searchTextSubmitted).map { MainViewPartialStateChange.SearchQueryChanged(it) }
-        val allIntentsObservable = Observable.merge(getCategoriesObservable, changeCategoryObservable, searchTextSubmittedObservable)
+        val allIntentsObservable = Observable.merge(getCategoriesObservable, changeCategoryObservable,
+                searchTextSubmittedObservable, isDenominatorChangedObservable)
                 .scan(MainViewState(), this::viewStateReducer)
                 .doOnError{ it.printStackTrace() }
                 //TODO(Move interactors to background thread)
@@ -53,6 +59,9 @@ class MainPresenter(private val getCategoriesInteractor: GetCategoriesInteractor
             }
             is MainViewPartialStateChange.SearchQueryChanged -> {
                 state.copy(navigateToSearchWithQuery = changes.query)
+            }
+            is MainViewPartialStateChange.IsDenominatorChanged -> {
+                state.copy(isDenominator = changes.isDenominator)
             }
         }
     }

@@ -123,9 +123,6 @@ class PostActivity : MviActivity<PostView, PostPresenter>(), PostView, TagsAdapt
         val post = state.post
         Glide.with(applicationContext).load(post.embedded.medias[0].imageUrl).into(ivPost)
         post.content?.let {
-
-            //val doc = Jsoup.parse(post.content.rendered)
-            //val elements = doc.getElementsByTag("iframe")
             val prefix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_prefix)
             val postfix = ResourceFile.readTextFromFile(applicationContext, R.raw.html_postfix)
             val content = StringBuilder().append(prefix)

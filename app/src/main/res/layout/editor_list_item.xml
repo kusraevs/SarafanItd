@@ -11,29 +11,14 @@
     android:paddingTop="12dp">
 
 
-    <ru.itd.sarafan.view.editorship.SquareFrameLayout
-        android:id="@+id/image_container"
+    <ru.itd.sarafan.view.editorship.SquareImageView
+        android:id="@+id/iv_photo"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="160dp"
+        android:src="@drawable/nadya"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_photo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/nadia" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="4dp"
-            android:background="@drawable/editor_photo_background_stroke" />
-
-    </ru.itd.sarafan.view.editorship.SquareFrameLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tv_name"
@@ -50,7 +35,7 @@
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_container" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_photo" />
 
 
     <TextView
