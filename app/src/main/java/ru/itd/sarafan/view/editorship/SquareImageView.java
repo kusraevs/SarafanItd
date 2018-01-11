@@ -16,10 +16,9 @@
 
 package ru.itd.sarafan.view.editorship;
 
-import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
-import android.util.AttributeSet;
-import android.widget.ImageView;
+    import android.content.Context;
+    import android.support.v7.widget.AppCompatImageView;
+    import android.util.AttributeSet;
 
 
 public class SquareImageView extends AppCompatImageView {

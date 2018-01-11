@@ -2,7 +2,6 @@ package ru.itd.sarafan.rest.factory;
 
 import android.util.Log;
 
-
 import java.io.IOException;
 
 import okhttp3.Interceptor;

@@ -1,14 +1,11 @@
 package ru.itd.sarafan.view.adapter.epoxy
 
 import android.view.View
-import android.widget.TextView
 import butterknife.BindView
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import ru.itd.sarafan.R
-import ru.itd.sarafan.rest.model.Post
-import ru.itd.sarafan.view.adapter.TagsAdapter
 
 /**
  * Created by macbook on 19.10.17.

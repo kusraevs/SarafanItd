@@ -1,13 +1,13 @@
 package ru.itd.sarafan.di
 
 import dagger.Component
-import ru.itd.sarafan.view.main.MainActivity
 import ru.itd.sarafan.businesslogic.interactors.*
 import ru.itd.sarafan.rest.CategoriesLoader
-import ru.itd.sarafan.view.posts.PostsFragment
 import ru.itd.sarafan.rest.PostsLoader
+import ru.itd.sarafan.view.main.MainActivity
 import ru.itd.sarafan.view.post.PostActivity
 import ru.itd.sarafan.view.post.PostPresenter
+import ru.itd.sarafan.view.posts.PostsFragment
 import ru.itd.sarafan.view.posts.PostsPresenter
 import ru.itd.sarafan.view.splash.SplashPresenter
 import javax.inject.Singleton

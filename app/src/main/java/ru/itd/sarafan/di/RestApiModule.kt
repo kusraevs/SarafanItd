@@ -14,6 +14,6 @@ class RestApiModule(private val context: Context) {
 
     @Provides
     fun provideRestApi(): RestApi {
-        return RestApiFactory().getRestApi(context)
+        return RestApiFactory.getRestApi(context)
     }
 }

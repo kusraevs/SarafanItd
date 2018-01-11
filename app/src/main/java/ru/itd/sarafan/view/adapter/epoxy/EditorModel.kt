@@ -1,6 +1,5 @@
 package ru.itd.sarafan.view.adapter.epoxy
 
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView

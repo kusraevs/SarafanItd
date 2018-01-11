@@ -1,11 +1,8 @@
 package ru.itd.sarafan.utils
 
 import android.app.Activity
-import android.support.v4.content.ContextCompat.startActivity
-import android.os.Parcelable
 import android.content.Intent
-import android.content.pm.ResolveInfo
-
+import android.os.Parcelable
 
 
 /**

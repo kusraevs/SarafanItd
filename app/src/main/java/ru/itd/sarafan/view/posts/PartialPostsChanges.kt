@@ -1,6 +1,5 @@
 package ru.itd.sarafan.view.posts
 
-import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.rest.model.Post
 
 /**

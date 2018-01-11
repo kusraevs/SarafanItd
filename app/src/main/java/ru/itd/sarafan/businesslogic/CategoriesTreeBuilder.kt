@@ -1,7 +1,8 @@
 package ru.itd.sarafan.businesslogic
 
-import ru.itd.sarafan.rest.model.Category
 import io.reactivex.functions.Function
+import ru.itd.sarafan.rest.model.Category
+
 /**
  * Created by macbook on 20.10.17.
  */

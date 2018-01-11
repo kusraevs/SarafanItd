@@ -3,8 +3,8 @@ package ru.itd.sarafan.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.itd.sarafan.rest.PostsLoader
 import ru.itd.sarafan.businesslogic.interactors.LoadPostsInteractor
+import ru.itd.sarafan.rest.PostsLoader
 
 /**
  * Created by macbook on 17.10.17.

@@ -2,18 +2,14 @@ package ru.itd.sarafan.view.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import ru.itd.sarafan.R
 import ru.itd.sarafan.rest.model.tags.Term
-import android.support.annotation.CallSuper
-import com.airbnb.epoxy.EpoxyHolder
-
-
 
 
 /**

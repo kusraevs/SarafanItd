@@ -11,8 +11,6 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import ru.itd.sarafan.R
 import ru.itd.sarafan.rest.model.Category
-import ru.itd.sarafan.rest.model.tags.Term
-import ru.itd.sarafan.view.adapter.TagsAdapter
 
 /**
  * Created by macbook on 21.10.17.

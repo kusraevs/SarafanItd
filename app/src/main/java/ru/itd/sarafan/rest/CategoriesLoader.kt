@@ -4,9 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.rest.model.Category
-import ru.itd.sarafan.rest.model.Post
-import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**

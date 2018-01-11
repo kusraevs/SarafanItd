@@ -4,13 +4,13 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
-import ru.itd.sarafan.rest.model.Category
-import android.widget.TextView
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import ru.itd.sarafan.R
+import ru.itd.sarafan.rest.model.Category
 
 
 /**

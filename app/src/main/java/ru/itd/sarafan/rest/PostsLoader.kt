@@ -1,10 +1,8 @@
 package ru.itd.sarafan.rest
 
 import io.reactivex.Observable
-import retrofit2.http.Query
 import ru.itd.sarafan.SarafanApplication
 import ru.itd.sarafan.rest.model.Post
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**

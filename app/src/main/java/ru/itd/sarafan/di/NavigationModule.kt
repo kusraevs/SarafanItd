@@ -1,12 +1,11 @@
 package ru.itd.sarafan.di
 
 import dagger.Module
-import ru.terrakok.cicerone.NavigatorHolder
-import javax.inject.Singleton
 import dagger.Provides
-import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.Cicerone
-
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
+import javax.inject.Singleton
 
 
 /**

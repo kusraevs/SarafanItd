@@ -2,7 +2,6 @@ package ru.itd.sarafan.view.main
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Spinner
 
 /**
  * Created by macbook on 26.10.17.

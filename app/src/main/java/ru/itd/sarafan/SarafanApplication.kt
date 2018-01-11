@@ -1,8 +1,10 @@
 package ru.itd.sarafan
 
 import android.app.Application
-import dagger.android.DaggerActivity
-import ru.itd.sarafan.di.*
+import ru.itd.sarafan.di.AppComponent
+import ru.itd.sarafan.di.DaggerAppComponent
+import ru.itd.sarafan.di.PostsModule
+import ru.itd.sarafan.di.RestApiModule
 
 
 /**

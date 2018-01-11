@@ -4,10 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import com.hannesdorfmann.mosby3.mvi.MviActivity
 import io.reactivex.Observable
-import ru.itd.sarafan.view.main.MainActivity
 import ru.itd.sarafan.R
 import ru.itd.sarafan.rest.model.Categories
 import ru.itd.sarafan.utils.RouterUtils
+import ru.itd.sarafan.view.main.MainActivity
 
 class SplashActivity : MviActivity<SplashView, SplashPresenter>(), SplashView {
 
